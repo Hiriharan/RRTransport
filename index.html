@@ -2270,8 +2270,9 @@ function handleEnquiry(e) {
   }
 
   // Expose functions globally so buttons can call them
-  window.saveEdits   = saveEdits;
+  window.saveEdits    = saveEdits;
   window.exitEditMode = exitEditMode;
+  window.enterEditMode = enterEditMode;
 
   // Ctrl+Shift+E shortcut
   document.addEventListener('keydown', function(e) {
@@ -2295,6 +2296,22 @@ var today = new Date().toISOString().split('T')[0];
 document.querySelectorAll('input[type="date"]').forEach(function(inp) { inp.min = today; });
 
 </script>
+
+<!-- EDIT MODE TRIGGER BUTTON (owner only — subtle pencil icon bottom right) -->
+<button id="edit-trigger-btn"
+  onclick="if(typeof window.enterEditMode==='function'){window.enterEditMode();}else{alert('Edit mode not loaded yet — try again in a second.');}"
+  title="Click to enter Edit Mode (or press Ctrl+Shift+E)"
+  style="position:fixed;bottom:24px;right:24px;z-index:99998;
+    width:44px;height:44px;border-radius:50%;
+    background:#111e45;border:1.5px solid rgba(232,78,27,0.4);
+    color:rgba(255,255,255,0.4);font-size:18px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 16px rgba(0,0,0,0.3);
+    transition:all 0.2s;line-height:1;"
+  onmouseover="this.style.borderColor='#e84e1b';this.style.color='#e84e1b';this.title='Enter Edit Mode';"
+  onmouseout="this.style.borderColor='rgba(232,78,27,0.4)';this.style.color='rgba(255,255,255,0.4)';"
+>✏</button>
+
 <!-- EDIT MODE BAR -->
 <div id="edit-bar" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99999;background:#111e45;border:1.5px solid #e84e1b;border-radius:40px;padding:10px 24px;gap:16px;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,0.5);font-family:'Barlow Condensed',sans-serif;white-space:nowrap;">
   <span style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#e84e1b;">✏ Edit Mode</span>
