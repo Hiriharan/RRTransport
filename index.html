@@ -1189,7 +1189,7 @@
     position: absolute;
     inset: 0;
     opacity: 0;
-    transition: opacity 0.8s ease;
+    transition: opacity 1.2s ease;
     pointer-events: none;
   }
 
@@ -1394,11 +1394,11 @@
     ctr    = document.getElementById('slide-cur');
     n      = slides.length;
     if(!n){ setTimeout(init, 100); return; }  // retry if not ready yet
-    t = setInterval(function(){ move(si+1); }, 4500);
+    t = setInterval(function(){ move(si+1); }, 6000);
     var el = document.getElementById('hero-slideshow');
     if(el){
       el.addEventListener('mouseenter', function(){ clearInterval(t); });
-      el.addEventListener('mouseleave', function(){ t = setInterval(function(){ move(si+1); }, 4500); });
+      el.addEventListener('mouseleave', function(){ t = setInterval(function(){ move(si+1); }, 6000); });
     }
   }
 
@@ -1411,7 +1411,7 @@
     if(ctr) ctr.textContent = si+1;
   }
 
-  window.goSlide   = function(i){ clearInterval(t); move(i); t = setInterval(function(){ move(si+1); }, 4500); };
+  window.goSlide   = function(i){ clearInterval(t); move(i); t = setInterval(function(){ move(si+1); }, 6000); };
   window.nextSlide = function(){ window.goSlide(si+1); };
   window.prevSlide = function(){ window.goSlide(si-1); };
 
@@ -1806,7 +1806,7 @@
           </div>
           <div>
             <h4>Email</h4>
-            <a href="mailto:rrtransport39&#64;gmail.com" style="color:#ffffff;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a>
+            <a href="/cdn-cgi/l/email-protection#d8aaaaacaab9b6aba8b7aaacebe1fefbeeece3bfb5b9b1b4f6bbb7b5" style="color:#ffffff;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a>
           </div>
         </div>
 
@@ -1999,7 +1999,7 @@
       <h5>Contact</h5>
       <ul>
         <li><a href="tel:+61478659152">0478 659 152</a></li>
-        <li><a href="mailto:rrtransport39&#64;gmail.com" style="color:rgba(255,255,255,0.75);text-decoration:none;">rrtransport39&#64;gmail&#46;com</a></li>
+        <li><a href="/cdn-cgi/l/email-protection#e496969096858a97948b9690d7ddc2c7d2d0df8389858d88ca878b89" style="color:rgba(255,255,255,0.75);text-decoration:none;">rrtransport39&#64;gmail&#46;com</a></li>
         <li><a href="#">Oxley Park, NSW</a></li>
         <li><a href="#">ACN: 694 839 051</a></li>
       </ul>
@@ -2012,7 +2012,7 @@
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 
   
 
@@ -2079,11 +2079,3 @@
 
     // Make all cards visible
   document.querySelectorAll('.anim').forEach(function(el) { el.classList.add('visible'); });
-
-  // Set min date on date inputs
-  var today = new Date().toISOString().split('T')[0];
-  document.querySelectorAll('input[type="date"]').forEach(function(inp) { inp.min = today; });
-
-</script>
-</body>
-</html>
