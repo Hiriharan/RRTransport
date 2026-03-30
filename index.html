@@ -1280,6 +1280,85 @@
     z-index: 5;
   }
 
+
+  /* ── EDIT MODE ── */
+  body.edit-mode [contenteditable="true"] {
+    outline: 2px dashed rgba(232,78,27,0.7) !important;
+    background: rgba(232,78,27,0.06) !important;
+    border-radius: 3px;
+    cursor: text !important;
+    min-width: 20px;
+    min-height: 1em;
+    display: inline-block;
+  }
+  body.edit-mode [contenteditable="true"]:focus {
+    outline: 2px solid #e84e1b !important;
+    background: rgba(232,78,27,0.1) !important;
+  }
+  #edit-bar {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    background: #111e45;
+    border: 1.5px solid #e84e1b;
+    border-radius: 40px;
+    padding: 10px 24px;
+    gap: 16px;
+    align-items: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    font-family: 'Barlow Condensed', sans-serif;
+    white-space: nowrap;
+  }
+  #edit-bar.visible { display: flex; }
+  #edit-bar .eb-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #e84e1b;
+  }
+  #edit-bar .eb-hint {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.5px;
+  }
+  #edit-bar button {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  #edit-bar button:hover { opacity: 0.85; }
+  #edit-bar .eb-save { background: #e84e1b; color: white; }
+  #edit-bar .eb-exit { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+  #edit-save-toast {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+    background: #1a2a5e;
+    color: white;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 10px 24px;
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+
 </style>
   <!-- 
     VERCEL DEPLOYMENT NOTE: Create a vercel.json file with:
@@ -2077,5 +2156,115 @@
   
 
 
-    // Make all cards visible
+  
+  // ── EDIT MODE (Ctrl+Shift+E) ──
+  (function() {
+    var editActive = false;
+
+    // Elements that can be edited — text content only, safe selectors
+    var EDITABLE = [
+      '.hero h1', '.hero-desc', '.hero-badge',
+      '.truck-name', '.truck-desc', '.truck-model',
+      '.price-amount', '.price-type', '.price-period',
+      '.price-features li',
+      '.step h3', '.step p',
+      '.term-item p',
+      '.review-text', '.review-name', '.review-meta',
+      '.section-title', '.section-sub',
+      '.contact-item p', '.contact-item a',
+      '.footer-desc', 'footer ul li a',
+      '.strip-item h4', '.strip-item p',
+      '.hero-card .lbl',
+      '.about-strip .strip-item h4',
+    ];
+
+    function enterEditMode() {
+      editActive = true;
+      document.body.classList.add('edit-mode');
+      document.getElementById('edit-bar').classList.add('visible');
+      EDITABLE.forEach(function(sel) {
+        document.querySelectorAll(sel).forEach(function(el) {
+          el.setAttribute('contenteditable', 'true');
+          el.setAttribute('spellcheck', 'false');
+        });
+      });
+      // Restore any previously saved content
+      loadSaved();
+      showToast('Edit mode ON — click any highlighted text to edit');
+    }
+
+    function exitEditMode() {
+      editActive = false;
+      document.body.classList.remove('edit-mode');
+      document.getElementById('edit-bar').classList.remove('visible');
+      document.querySelectorAll('[contenteditable]').forEach(function(el) {
+        el.removeAttribute('contenteditable');
+      });
+    }
+
+    function saveEdits() {
+      var saved = {};
+      document.querySelectorAll('[contenteditable]').forEach(function(el, i) {
+        var key = el.tagName + '_' + i + '_' + (el.className || '').slice(0,20);
+        saved[key] = el.innerHTML;
+      });
+      try {
+        localStorage.setItem('rr_edits', JSON.stringify(saved));
+        showToast('✅ Saved! Changes stored in this browser.');
+      } catch(e) {
+        showToast('⚠️ Could not save — try a different browser.');
+      }
+    }
+
+    function loadSaved() {
+      try {
+        var raw = localStorage.getItem('rr_edits');
+        if (!raw) return;
+        var saved = JSON.parse(raw);
+        var els = document.querySelectorAll('[contenteditable]');
+        els.forEach(function(el, i) {
+          var key = el.tagName + '_' + i + '_' + (el.className || '').slice(0,20);
+          if (saved[key]) el.innerHTML = saved[key];
+        });
+      } catch(e) {}
+    }
+
+    function showToast(msg) {
+      var t = document.getElementById('edit-save-toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(function() { t.style.display = 'none'; }, 3000);
+    }
+
+    // Keyboard shortcut: Ctrl + Shift + E
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.shiftKey && (e.key === 'E' || e.key === 'e')) {
+        e.preventDefault();
+        if (editActive) { exitEditMode(); } else { enterEditMode(); }
+      }
+      // Escape to exit
+      if (e.key === 'Escape' && editActive) { exitEditMode(); }
+    });
+
+    // Prevent Enter from creating new lines in headings
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && e.target.hasAttribute('contenteditable')) {
+        var tag = e.target.tagName.toLowerCase();
+        if (['h1','h2','h3','h4','h5','p','span','a'].includes(tag)) {
+          e.preventDefault();
+        }
+      }
+    });
+  })();
+
+
+  // Make all cards visible
   document.querySelectorAll('.anim').forEach(function(el) { el.classList.add('visible'); });
+
+  // Set min date on date inputs
+  var today = new Date().toISOString().split('T')[0];
+  document.querySelectorAll('input[type="date"]').forEach(function(inp) { inp.min = today; });
+
+</script>
+</body>
+</html>
