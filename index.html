@@ -1382,6 +1382,47 @@
   
 
   </div>
+
+<script>
+// Inline slideshow — runs immediately after element is in DOM
+(function(){
+  var si=0, n=0, t, slides, dots, ctr;
+
+  function init(){
+    slides = document.querySelectorAll('#hero-slideshow .slide');
+    dots   = document.querySelectorAll('#hero-slideshow .slide-dot');
+    ctr    = document.getElementById('slide-cur');
+    n      = slides.length;
+    if(!n){ setTimeout(init, 100); return; }  // retry if not ready yet
+    t = setInterval(function(){ move(si+1); }, 4500);
+    var el = document.getElementById('hero-slideshow');
+    if(el){
+      el.addEventListener('mouseenter', function(){ clearInterval(t); });
+      el.addEventListener('mouseleave', function(){ t = setInterval(function(){ move(si+1); }, 4500); });
+    }
+  }
+
+  function move(i){
+    slides[si].classList.remove('active');
+    if(dots[si]) dots[si].classList.remove('active');
+    si = ((i%n)+n)%n;
+    slides[si].classList.add('active');
+    if(dots[si]) dots[si].classList.add('active');
+    if(ctr) ctr.textContent = si+1;
+  }
+
+  window.goSlide   = function(i){ clearInterval(t); move(i); t = setInterval(function(){ move(si+1); }, 4500); };
+  window.nextSlide = function(){ window.goSlide(si+1); };
+  window.prevSlide = function(){ window.goSlide(si-1); };
+
+  // Start immediately or wait for DOM
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
 </section>
 
 <!-- BOOKING BAR -->
@@ -1765,7 +1806,7 @@
           </div>
           <div>
             <h4>Email</h4>
-            <a href="mailto:rrtransport39&#64;gmail.com" style="color:inherit;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a>
+            <a href="mailto:rrtransport39&#64;gmail.com" style="color:#ffffff;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a>
           </div>
         </div>
 
@@ -1931,7 +1972,7 @@
   <span class="abn-item"><strong>Rithvin Rylan Transport Pty Ltd</strong></span>
   <span class="abn-item">ACN <strong>694 839 051</strong></span>
   <span class="abn-item">Oxley Park <strong>NSW</strong></span>
-  <span class="abn-item"><strong><a href="mailto:rrtransport39&#64;gmail.com" style="color:inherit;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a></strong></span>
+  <span class="abn-item" style="color:rgba(255,255,255,0.8);"><strong style="color:#ffffff;">rrtransport39<wbr>&#64;<wbr>gmail<wbr>&#46;<wbr>com</strong></span>&#64;gmail&#46;com</strong></span>
   <span class="abn-item"><strong>0478 659 152</strong></span>
 </div>
 
@@ -2036,31 +2077,12 @@
   
 
 
-  // SLIDESHOW
-  var _si = 0, _st, _sn = 5;
-  function _ss(i) {
-    var s = document.querySelectorAll('#hero-slideshow .slide');
-    var d = document.querySelectorAll('.slide-dot');
-    var c = document.getElementById('slide-cur');
-    s[_si].classList.remove('active');
-    if(d[_si]) d[_si].classList.remove('active');
-    _si = ((i%_sn)+_sn)%_sn;
-    s[_si].classList.add('active');
-    if(d[_si]) d[_si].classList.add('active');
-    if(c) c.textContent = _si+1;
-  }
-  function goSlide(i){clearInterval(_st);_ss(i);_st=setInterval(function(){_ss(_si+1);},4500);}
-  function nextSlide(){goSlide(_si+1);}
-  function prevSlide(){goSlide(_si-1);}
-  _st = setInterval(function(){_ss(_si+1);}, 4500);
-  var _ssEl = document.getElementById('hero-slideshow');
-  if(_ssEl){
-    _ssEl.addEventListener('mouseenter',function(){clearInterval(_st);});
-    _ssEl.addEventListener('mouseleave',function(){_st=setInterval(function(){_ss(_si+1);},4500);});
-  }
-
-  // Make all cards visible
+    // Make all cards visible
   document.querySelectorAll('.anim').forEach(function(el) { el.classList.add('visible'); });
+
+  // Set min date on date inputs
+  var today = new Date().toISOString().split('T')[0];
+  document.querySelectorAll('input[type="date"]').forEach(function(inp) { inp.min = today; });
 
 </script>
 </body>
