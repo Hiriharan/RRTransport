@@ -2181,7 +2181,7 @@
     function enterEditMode() {
       editActive = true;
       document.body.classList.add('edit-mode');
-      document.getElementById('edit-bar').classList.add('visible');
+      var eb=document.getElementById('edit-bar'); if(eb){eb.style.display='flex';}
       EDITABLE.forEach(function(sel) {
         document.querySelectorAll(sel).forEach(function(el) {
           el.setAttribute('contenteditable', 'true');
@@ -2196,7 +2196,7 @@
     function exitEditMode() {
       editActive = false;
       document.body.classList.remove('edit-mode');
-      document.getElementById('edit-bar').classList.remove('visible');
+      var eb=document.getElementById('edit-bar'); if(eb){eb.style.display='none';}
       document.querySelectorAll('[contenteditable]').forEach(function(el) {
         el.removeAttribute('contenteditable');
       });
@@ -2231,6 +2231,7 @@
 
     function showToast(msg) {
       var t = document.getElementById('edit-save-toast');
+      if (!t) return;
       t.textContent = msg;
       t.style.display = 'block';
       setTimeout(function() { t.style.display = 'none'; }, 3000);
@@ -2266,5 +2267,15 @@
   document.querySelectorAll('input[type="date"]').forEach(function(inp) { inp.min = today; });
 
 </script>
+
+<!-- EDIT MODE BAR -->
+<div id="edit-bar" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:99999;background:#111e45;border:1.5px solid #e84e1b;border-radius:40px;padding:10px 24px;gap:16px;align-items:center;box-shadow:0 8px 32px rgba(0,0,0,0.5);font-family:'Barlow Condensed',sans-serif;white-space:nowrap;">
+  <span style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#e84e1b;">✏ Edit Mode</span>
+  <span style="font-size:12px;color:rgba(255,255,255,0.5);">Click any highlighted text to edit</span>
+  <button onclick="saveEdits()" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 18px;border-radius:20px;border:none;cursor:pointer;background:#e84e1b;color:white;">💾 Save</button>
+  <button onclick="exitEditMode()" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 18px;border-radius:20px;border:none;cursor:pointer;background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);">✕ Exit</button>
+</div>
+<div id="edit-save-toast" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:99999;background:#1a2a5e;color:white;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;padding:10px 24px;border-radius:24px;border:1px solid rgba(255,255,255,0.15);box-shadow:0 4px 20px rgba(0,0,0,0.4);white-space:nowrap;"></div>
+
 </body>
 </html>
