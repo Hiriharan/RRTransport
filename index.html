@@ -1357,7 +1357,7 @@
       <div class="slide-counter"><span id="slide-cur">1</span> / 5</div>
       <div class="slide-dots">
       <button class="slide-dot active" onclick="goSlide(0)" aria-label="Slide 1"></button>
-      <button class="slide-dot" onclick="goSlide(1)" aria-label="Slide 2"></button>
+      <button class="slide-dot active" onclick="goSlide(1)" aria-label="Slide 2"></button>
       <button class="slide-dot" onclick="goSlide(2)" aria-label="Slide 3"></button>
       <button class="slide-dot" onclick="goSlide(3)" aria-label="Slide 4"></button>
       <button class="slide-dot" onclick="goSlide(4)" aria-label="Slide 5"></button>
@@ -1765,7 +1765,7 @@
           </div>
           <div>
             <h4>Email</h4>
-            <a href="#" id="em-contact" style="color:inherit;text-decoration:none;">&#x200B;</a>
+            <a href="mailto:rrtransport39&#64;gmail.com" style="color:inherit;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a>
           </div>
         </div>
 
@@ -1931,7 +1931,7 @@
   <span class="abn-item"><strong>Rithvin Rylan Transport Pty Ltd</strong></span>
   <span class="abn-item">ACN <strong>694 839 051</strong></span>
   <span class="abn-item">Oxley Park <strong>NSW</strong></span>
-  <span class="abn-item"><strong><a href="#" id="em-abn-strip" style="color:inherit;text-decoration:none;">&#x200B;</a></strong></span>
+  <span class="abn-item"><strong><a href="mailto:rrtransport39&#64;gmail.com" style="color:inherit;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a></strong></span>
   <span class="abn-item"><strong>0478 659 152</strong></span>
 </div>
 
@@ -1958,7 +1958,7 @@
       <h5>Contact</h5>
       <ul>
         <li><a href="tel:+61478659152">0478 659 152</a></li>
-        <li><a href="#" id="em-footer" style="color:inherit;text-decoration:none;">&#x200B;</a></li>
+        <li><a href="mailto:rrtransport39&#64;gmail.com" style="color:rgba(255,255,255,0.75);text-decoration:none;">rrtransport39&#64;gmail&#46;com</a></li>
         <li><a href="#">Oxley Park, NSW</a></li>
         <li><a href="#">ACN: 694 839 051</a></li>
       </ul>
@@ -2033,89 +2033,31 @@
   
 
 
-  // ── HERO SLIDESHOW ──
-  let slideIndex = 0;
-  const totalSlides = 5;
-  let slideTimer = setInterval(nextSlide, 4500);
+  
 
-  function goSlide(n) {
-    clearInterval(slideTimer);
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.slide-dot');
-    slides[slideIndex].classList.remove('active');
-    dots[slideIndex].classList.remove('active');
-    slideIndex = (n + totalSlides) % totalSlides;
-    slides[slideIndex].classList.add('active');
-    dots[slideIndex].classList.add('active');
-    document.getElementById('slide-cur').textContent = slideIndex + 1;
-    slideTimer = setInterval(nextSlide, 4500);
+
+  // SLIDESHOW
+  var _si = 0, _st, _sn = 5;
+  function _ss(i) {
+    var s = document.querySelectorAll('#hero-slideshow .slide');
+    var d = document.querySelectorAll('.slide-dot');
+    var c = document.getElementById('slide-cur');
+    s[_si].classList.remove('active');
+    if(d[_si]) d[_si].classList.remove('active');
+    _si = ((i%_sn)+_sn)%_sn;
+    s[_si].classList.add('active');
+    if(d[_si]) d[_si].classList.add('active');
+    if(c) c.textContent = _si+1;
   }
-
-  function nextSlide() { goSlide(slideIndex + 1); }
-  function prevSlide() { goSlide(slideIndex - 1); }
-
-  // Pause on hover
-  const ss = document.getElementById('hero-slideshow');
-  if (ss) {
-    ss.addEventListener('mouseenter', () => clearInterval(slideTimer));
-    ss.addEventListener('mouseleave', () => { slideTimer = setInterval(nextSlide, 4500); });
+  function goSlide(i){clearInterval(_st);_ss(i);_st=setInterval(function(){_ss(_si+1);},4500);}
+  function nextSlide(){goSlide(_si+1);}
+  function prevSlide(){goSlide(_si-1);}
+  _st = setInterval(function(){_ss(_si+1);}, 4500);
+  var _ssEl = document.getElementById('hero-slideshow');
+  if(_ssEl){
+    _ssEl.addEventListener('mouseenter',function(){clearInterval(_st);});
+    _ssEl.addEventListener('mouseleave',function(){_st=setInterval(function(){_ss(_si+1);},4500);});
   }
-
-  // Set min date on date inputs
-  const today = new Date().toISOString().split('T')[0];
-  document.querySelectorAll('input[type="date"]').forEach(inp => inp.min = today);
-
-  // ── SLIDESHOW (reliable version) ──
-  (function() {
-    var cur = 0;
-    var slides = document.querySelectorAll('#hero-slideshow .slide');
-    var dots = document.querySelectorAll('.slide-dot');
-    var counter = document.getElementById('slide-cur');
-    var n = slides.length;
-    var timer;
-
-    function go(i) {
-      if (!n) return;
-      slides[cur].classList.remove('active');
-      if (dots[cur]) dots[cur].classList.remove('active');
-      cur = ((i % n) + n) % n;
-      slides[cur].classList.add('active');
-      if (dots[cur]) dots[cur].classList.add('active');
-      if (counter) counter.textContent = cur + 1;
-    }
-
-    window.goSlide = function(i) { clearInterval(timer); go(i); timer = setInterval(function(){go(cur+1);}, 4500); };
-    window.nextSlide = function() { window.goSlide(cur + 1); };
-    window.prevSlide = function() { window.goSlide(cur - 1); };
-
-    // init
-    slides.forEach(function(s, i) { s.classList.toggle('active', i === 0); });
-    dots.forEach(function(d, i) { d.classList.toggle('active', i === 0); });
-    timer = setInterval(function() { go(cur + 1); }, 4500);
-
-    var ss = document.getElementById('hero-slideshow');
-    if (ss) {
-      ss.addEventListener('mouseenter', function() { clearInterval(timer); });
-      ss.addEventListener('mouseleave', function() { timer = setInterval(function(){go(cur+1);}, 4500); });
-    }
-  })();
-
-  // ── EMAIL via char codes (Cloudflare-proof) ──
-  (function() {
-    var c = [114,114,116,114,97,110,115,112,111,114,116,51,57,64,103,109,97,105,108,46,99,111,109];
-    var em = c.map(function(x) { return String.fromCharCode(x); }).join('');
-    function inject() {
-      ['em-contact','em-abn-strip','em-footer'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) { el.href = 'mai' + 'lto:' + em; el.textContent = em; }
-      });
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', inject);
-    } else {
-      inject();
-    }
-  })();
 
   // Make all cards visible
   document.querySelectorAll('.anim').forEach(function(el) { el.classList.add('visible'); });
