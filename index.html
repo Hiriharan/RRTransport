@@ -1570,6 +1570,7 @@
     { "headers": [{ "source": "/(.*)", "headers": [{ "key": "cf-mitigate", "value": "disable" }] }] }
     to prevent Cloudflare email obfuscation if using Cloudflare proxy.
   -->
+  <script src="https://js.stripe.com/v3/" defer></script>
 </head>
 <body>
 
@@ -2034,7 +2035,7 @@
           </div>
           <div class="deposit-form-group">
             <label>Card Details</label>
-            <div id="stripe-card-element"><span style="font-size:12px;color:#9a9890;">Loading card field...</span></div>
+            <div id="stripe-card-element" style="min-height:42px;"></div>
             <div id="stripe-card-errors"></div>
           </div>
 
@@ -2488,39 +2489,43 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// ── STRIPE DEPOSIT — Promise-based, no async/await ──
-(function() {
-  var stripeLoaded = false;
-  var stripe, card;
+// ── STRIPE DEPOSIT ──
+document.addEventListener('DOMContentLoaded', function() {
+  // Stripe is already loaded from <head> script tag
+  var checkStripe = setInterval(function() {
+    if (typeof Stripe === 'undefined') return; // wait for Stripe.js
+    clearInterval(checkStripe);
 
-  function loadStripe() {
-    if (stripeLoaded) return;
-    stripeLoaded = true;
-    var script = document.createElement('script');
-    script.src = 'https://js.stripe.com/v3/';
-    script.onload = initStripe;
-    document.head.appendChild(script);
-  }
-
-  function initStripe() {
-    stripe = Stripe( + STRIPE_KEY + );
+    var stripe = Stripe( + STRIPE_KEY + );
     var elements = stripe.elements();
     var cardStyle = {
       base: {
         fontFamily: 'Barlow, sans-serif',
-        fontSize: '14px',
+        fontSize: '15px',
         color: '#1a1a1a',
         '::placeholder': { color: '#9a9890' }
       },
       invalid: { color: '#c23b2a' }
     };
-    card = elements.create('card', { style: cardStyle, hidePostalCode: true });
-    card.mount('#stripe-card-element');
+
+    var card = elements.create('card', { style: cardStyle, hidePostalCode: true });
+
+    // Mount card — clear the loading text first
+    var cardEl = document.getElementById('stripe-card-element');
+    if (cardEl) {
+      cardEl.innerHTML = '';
+      card.mount('#stripe-card-element');
+    }
+
     card.on('change', function(e) {
-      document.getElementById('stripe-card-errors').textContent = e.error ? e.error.message : '';
+      var errEl = document.getElementById('stripe-card-errors');
+      if (errEl) errEl.textContent = e.error ? e.error.message : '';
     });
 
-    document.getElementById('deposit-form').addEventListener('submit', function(e) {
+    var form = document.getElementById('deposit-form');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
       e.preventDefault();
       var name     = document.getElementById('dep-name').value.trim();
       var email    = document.getElementById('dep-email').value.trim();
@@ -2529,7 +2534,7 @@ document.addEventListener('keydown', function(e) {
       var date     = document.getElementById('dep-date').value;
 
       if (!name || !email || !phone || !hireType || !date) {
-        alert('Please fill in all fields.');
+        alert('Please fill in all fields before paying.');
         return;
       }
 
@@ -2538,7 +2543,6 @@ document.addEventListener('keydown', function(e) {
       btn.textContent = 'Processing...';
       document.getElementById('stripe-card-errors').textContent = '';
 
-      // Step 1: Create PaymentIntent on server
       fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2547,7 +2551,6 @@ document.addEventListener('keydown', function(e) {
       .then(function(resp) { return resp.json(); })
       .then(function(data) {
         if (data.error) throw new Error(data.error);
-        // Step 2: Confirm card payment
         return stripe.confirmCardPayment(data.clientSecret, {
           payment_method: {
             card: card,
@@ -2559,20 +2562,17 @@ document.addEventListener('keydown', function(e) {
         if (result.error) {
           document.getElementById('stripe-card-errors').textContent = result.error.message;
           btn.disabled = false;
-          btn.textContent = 'Pay $100 Deposit';
+          btn.innerHTML = '🔒 Pay $100 Deposit';
         } else if (result.paymentIntent.status === 'succeeded') {
-          document.getElementById('deposit-form').style.display = 'none';
+          form.style.display = 'none';
           document.getElementById('deposit-success').style.display = 'block';
-          var waMsg = 'New $100 deposit PAID!' +
-            '
+          var waMsg = '💰 $100 deposit PAID!
 *Name:* ' + name +
             '
-*Email:* ' + email +
-            '
+*Email:* ' + email + '
 *Phone:* ' + phone +
             '
-*Hire:* ' + hireType +
-            '
+*Hire:* ' + hireType + '
 *Date:* ' + date +
             '
 *ID:* ' + result.paymentIntent.id;
@@ -2582,18 +2582,11 @@ document.addEventListener('keydown', function(e) {
       .catch(function(err) {
         document.getElementById('stripe-card-errors').textContent = err.message || 'Payment failed. Please try again.';
         btn.disabled = false;
-        btn.textContent = 'Pay $100 Deposit';
+        btn.innerHTML = '🔒 Pay $100 Deposit';
       });
     });
-  }
-
-  // Load Stripe immediately on page load — no lazy loading
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadStripe);
-  } else {
-    loadStripe();
-  }
-})();
+  }, 100); // check every 100ms until Stripe is ready
+});
 
 // ── GENERAL ──
 document.querySelectorAll('.anim').forEach(function(el) { el.classList.add('visible'); });
