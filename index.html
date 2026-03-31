@@ -2480,6 +2480,7 @@ document.addEventListener('keydown', function(e) {
 // ── STRIPE DEPOSIT ──
 (function() {
   var stripeLoaded = false;
+  var stripe, elements, card;
 
   function loadStripe() {
     if (stripeLoaded) return;
@@ -2491,8 +2492,8 @@ document.addEventListener('keydown', function(e) {
   }
 
   function initStripe() {
-    var stripe = Stripe('pk_live_51Sudj1FgOT9qIaR1mpl3W3xt62L8TnJNRrDoXMLlzzGTMAgWgYhT3CCrnImQ0yhlyeE5jVIfp0hqyYas5hgyGovT00ZpxtuDzj');
-    var elements = stripe.elements();
+    stripe = Stripe('pk_live_51Sudj1FgOT9qIaR1mpl3W3xt62L8TnJNRrDoXMLlzzGTMAgWgYhT3CCrnImQ0yhlyeE5jVIfp0hqyYas5hgyGovT00ZpxtuDzj');
+    elements = stripe.elements();
 
     var cardStyle = {
       base: {
@@ -2504,7 +2505,7 @@ document.addEventListener('keydown', function(e) {
       invalid: { color: '#c23b2a' }
     };
 
-    var card = elements.create('card', { style: cardStyle, hidePostalCode: true });
+    card = elements.create('card', { style: cardStyle, hidePostalCode: true });
     card.mount('#stripe-card-element');
 
     card.on('change', function(e) {
@@ -2513,50 +2514,70 @@ document.addEventListener('keydown', function(e) {
 
     document.getElementById('deposit-form').addEventListener('submit', async function(e) {
       e.preventDefault();
-      var btn = document.getElementById('deposit-submit-btn');
-      var name    = document.getElementById('dep-name').value.trim();
-      var email   = document.getElementById('dep-email').value.trim();
-      var phone   = document.getElementById('dep-phone').value.trim();
-      var hire    = document.getElementById('dep-hire').value;
-      var date    = document.getElementById('dep-date').value;
 
-      if (!name || !email || !phone || !hire || !date) {
+      var name     = document.getElementById('dep-name').value.trim();
+      var email    = document.getElementById('dep-email').value.trim();
+      var phone    = document.getElementById('dep-phone').value.trim();
+      var hireType = document.getElementById('dep-hire').value;
+      var date     = document.getElementById('dep-date').value;
+
+      if (!name || !email || !phone || !hireType || !date) {
         alert('Please fill in all fields before paying.');
         return;
       }
 
+      var btn = document.getElementById('deposit-submit-btn');
       btn.disabled = true;
-      btn.textContent = 'Processing...';
+      btn.textContent = '⏳ Processing...';
+      document.getElementById('stripe-card-errors').textContent = '';
 
-      // Create a PaymentMethod and confirm payment
-      // For a real deposit you need a backend to create a PaymentIntent
-      // This uses Stripe's confirmCardPayment with a client-side approach
-      // showing the card is valid — for full server integration see docs
+      try {
+        // Step 1: Create PaymentIntent on the server
+        var response = await fetch('/api/create-payment-intent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone, hireType, date })
+        });
 
-      var result = await stripe.createPaymentMethod({
-        type: 'card',
-        card: card,
-        billing_details: { name: name, email: email, phone: phone }
-      });
+        var data = await response.json();
 
-      if (result.error) {
-        document.getElementById('stripe-card-errors').textContent = result.error.message;
+        if (!response.ok) {
+          throw new Error(data.error || 'Server error');
+        }
+
+        // Step 2: Confirm the payment with the card element
+        var result = await stripe.confirmCardPayment(data.clientSecret, {
+          payment_method: {
+            card: card,
+            billing_details: { name: name, email: email, phone: phone }
+          }
+        });
+
+        if (result.error) {
+          document.getElementById('stripe-card-errors').textContent = result.error.message;
+          btn.disabled = false;
+          btn.innerHTML = '🔒 Pay $100 Deposit';
+        } else if (result.paymentIntent.status === 'succeeded') {
+          // Payment successful!
+          document.getElementById('deposit-form').style.display = 'none';
+          document.getElementById('deposit-success').style.display = 'block';
+
+          // Notify via WhatsApp
+          var waMsg = '💰 New $100 deposit received!\n\n' +
+            '*Name:* ' + name + '\n' +
+            '*Email:* ' + email + '\n' +
+            '*Phone:* ' + phone + '\n' +
+            '*Hire Type:* ' + hireType + '\n' +
+            '*Pickup Date:* ' + date + '\n' +
+            '*Payment ID:* ' + result.paymentIntent.id + '\n' +
+            '*Status:* ✅ PAID\n\n' +
+            'Money is in your Stripe account!';
+          openWhatsApp(waMsg);
+        }
+      } catch(err) {
+        document.getElementById('stripe-card-errors').textContent = err.message || 'Payment failed. Please try again.';
         btn.disabled = false;
         btn.innerHTML = '🔒 Pay $100 Deposit';
-      } else {
-        // Payment method created — send to WhatsApp with payment method ID
-        var waMsg = 'New deposit payment received!\n\n' +
-          '*Name:* ' + name + '\n' +
-          '*Email:* ' + email + '\n' +
-          '*Phone:* ' + phone + '\n' +
-          '*Hire Type:* ' + hire + '\n' +
-          '*Date:* ' + date + '\n' +
-          '*Amount:* $100 deposit\n' +
-          '*Payment ID:* ' + result.paymentMethod.id + '\n\n' +
-          'Charge this card via your Stripe dashboard.';
-        openWhatsApp(waMsg);
-        document.getElementById('deposit-form').style.display = 'none';
-        document.getElementById('deposit-success').style.display = 'block';
       }
     });
   }
@@ -2570,9 +2591,8 @@ document.addEventListener('keydown', function(e) {
     obs.observe(depSection);
   }
 
-  // Also load on deposit nav click
   var depLink = document.querySelector('a[href="#deposit"]');
-  if (depLink) depLink.addEventListener('click', loadStripe);
+  if (depLink) depLink.addEventListener('click', function() { setTimeout(loadStripe, 100); });
 })();
 
 // ── GENERAL ──
