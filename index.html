@@ -2034,7 +2034,7 @@
           </div>
           <div class="deposit-form-group">
             <label>Card Details</label>
-            <div id="stripe-card-element"></div>
+            <div id="stripe-card-element"><span style="font-size:12px;color:#9a9890;">Loading card field...</span></div>
             <div id="stripe-card-errors"></div>
           </div>
 
@@ -2087,7 +2087,7 @@
           </div>
           <div>
             <h4>Email</h4>
-            <a href="mailto:rrtransport39&#64;gmail.com" style="color:#ffffff;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a>
+            <a href="/cdn-cgi/l/email-protection#ddafafa9afbcb3aeadb2afa9eee4fbfeebe9e6bab0bcb4b1f3beb2b0" style="color:#ffffff;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a>
           </div>
         </div>
 
@@ -2280,7 +2280,7 @@
       <h5>Contact</h5>
       <ul>
         <li><a href="tel:+61478659152">0478 659 152</a></li>
-        <li><a href="mailto:rrtransport39&#64;gmail.com" style="color:rgba(255,255,255,0.75);text-decoration:none;">rrtransport39&#64;gmail&#46;com</a></li>
+        <li><a href="/cdn-cgi/l/email-protection#81f3f3f5f3e0eff2f1eef3f5b2b8a7a2b7b5bae6ece0e8edafe2eeec" style="color:rgba(255,255,255,0.75);text-decoration:none;">rrtransport39&#64;gmail&#46;com</a></li>
         <li><a href="#">Oxley Park, NSW</a></li>
         <li><a href="#">ACN: 694 839 051</a></li>
       </ul>
@@ -2293,7 +2293,7 @@
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── SLIDESHOW ──
 window.addEventListener('load', function() {
   var si = 0;
@@ -2587,16 +2587,12 @@ document.addEventListener('keydown', function(e) {
     });
   }
 
-  // Load Stripe when deposit section is visible
-  var depSection = document.getElementById('deposit');
-  if (depSection) {
-    var obs = new IntersectionObserver(function(entries) {
-      if (entries[0].isIntersecting) { loadStripe(); obs.disconnect(); }
-    }, { threshold: 0.1 });
-    obs.observe(depSection);
+  // Load Stripe immediately on page load — no lazy loading
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadStripe);
+  } else {
+    loadStripe();
   }
-  var depLink = document.querySelector('a[href="#deposit"]');
-  if (depLink) depLink.addEventListener('click', function() { setTimeout(loadStripe, 100); });
 })();
 
 // ── GENERAL ──
@@ -2614,6 +2610,6 @@ document.querySelectorAll('input[type="date"]').forEach(function(inp) { inp.min 
   <button onclick="saveEdits()" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 18px;border-radius:20px;border:none;cursor:pointer;background:#e84e1b;color:white;">💾 Save</button>
   <button onclick="exitEditMode()" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 18px;border-radius:20px;border:none;cursor:pointer;background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2);">✕ Exit</button>
 </div>
-<div id="edit-save-toast" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:99999;background:#1a2a5e;color:white;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;padding:10px 24px;border-radius:24px;border:1px solid rgba(255,255,255,0.15);box-shadow:0 4px 20px rgba(0,0,0,0.4);white-space:nowrap;"></div>
+<div id="edit-save-toast" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:99999;background:#1a2a5e;color:white;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;padding:10px 24px;border-radius:24px;border:1px solid rgba(255,255,255,0.15);box-shadow:0 4px 20px rgba(0,0,0,0.4);white-space:nowrap;"></div>
 </body>
 </html>
