@@ -1570,7 +1570,7 @@
     { "headers": [{ "source": "/(.*)", "headers": [{ "key": "cf-mitigate", "value": "disable" }] }] }
     to prevent Cloudflare email obfuscation if using Cloudflare proxy.
   -->
-  <script src="https://js.stripe.com/v3/" defer></script>
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
 
@@ -2035,7 +2035,7 @@
           </div>
           <div class="deposit-form-group">
             <label>Card Details</label>
-            <div id="stripe-card-element" style="min-height:42px;"></div>
+            <div id="stripe-card-element" style="min-height:48px;padding:2px 0;"></div>
             <div id="stripe-card-errors"></div>
           </div>
 
@@ -2490,25 +2490,101 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ── STRIPE DEPOSIT ──
-document.addEventListener('DOMContentLoaded', function() {
-  // Stripe is already loaded from <head> script tag
-  var checkStripe = setInterval(function() {
-    if (typeof Stripe === 'undefined') return; // wait for Stripe.js
-    clearInterval(checkStripe);
+window.addEventListener('load', function() {
+  var statusEl = document.getElementById('stripe-card-element');
+  if (statusEl) statusEl.innerHTML = '<span style="font-size:12px;color:#666;">Initialising payment...</span>';
 
-    var stripe = Stripe( + STRIPE_KEY + );
-    var elements = stripe.elements();
-    var cardStyle = {
-      base: {
-        fontFamily: 'Barlow, sans-serif',
-        fontSize: '15px',
-        color: '#1a1a1a',
-        '::placeholder': { color: '#9a9890' }
-      },
+  if (typeof Stripe === 'undefined') {
+    if (statusEl) statusEl.innerHTML = '<span style="font-size:12px;color:red;">Payment unavailable. Please call us on 0478 659 152.</span>';
+    return;
+  }
+
+  var stripe = Stripe( + STRIPE_KEY + );
+  var elements = stripe.elements();
+  var card = elements.create('card', {
+    style: {
+      base: { fontFamily: 'sans-serif', fontSize: '15px', color: '#1a1a1a', '::placeholder': { color: '#999' } },
       invalid: { color: '#c23b2a' }
-    };
+    },
+    hidePostalCode: true
+  });
 
-    var card = elements.create('card', { style: cardStyle, hidePostalCode: true });
+  if (statusEl) statusEl.innerHTML = '';
+  card.mount('#stripe-card-element');
+
+  card.on('ready', function() {
+    console.log('Stripe card element ready');
+  });
+
+  card.on('change', function(e) {
+    var errEl = document.getElementById('stripe-card-errors');
+    if (errEl) errEl.textContent = e.error ? e.error.message : '';
+  });
+
+  var form = document.getElementById('deposit-form');
+  if (!form) return;
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var name     = document.getElementById('dep-name').value.trim();
+    var email    = document.getElementById('dep-email').value.trim();
+    var phone    = document.getElementById('dep-phone').value.trim();
+    var hireType = document.getElementById('dep-hire').value;
+    var date     = document.getElementById('dep-date').value;
+
+    if (!name || !email || !phone || !hireType || !date) {
+      alert('Please fill in all fields before paying.');
+      return;
+    }
+
+    var btn = document.getElementById('deposit-submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Processing...';
+    document.getElementById('stripe-card-errors').textContent = '';
+
+    fetch('/api/create-payment-intent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, phone: phone, hireType: hireType, date: date })
+    })
+    .then(function(resp) { return resp.json(); })
+    .then(function(data) {
+      if (data.error) throw new Error(data.error);
+      return stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: { name: name, email: email, phone: phone }
+        }
+      });
+    })
+    .then(function(result) {
+      if (result.error) {
+        document.getElementById('stripe-card-errors').textContent = result.error.message;
+        btn.disabled = false;
+        btn.innerHTML = '🔒 Pay $100 Deposit';
+      } else if (result.paymentIntent.status === 'succeeded') {
+        form.style.display = 'none';
+        document.getElementById('deposit-success').style.display = 'block';
+        var waMsg = '💰 $100 deposit PAID!
+*Name:* ' + name +
+          '
+*Email:* ' + email + '
+*Phone:* ' + phone +
+          '
+*Hire:* ' + hireType + '
+*Date:* ' + date +
+          '
+*ID:* ' + result.paymentIntent.id;
+        openWhatsApp(waMsg);
+      }
+    })
+    .catch(function(err) {
+      document.getElementById('stripe-card-errors').textContent = err.message || 'Payment failed. Please try again.';
+      btn.disabled = false;
+      btn.innerHTML = '🔒 Pay $100 Deposit';
+    });
+  });
+};
 
     // Mount card — clear the loading text first
     var cardEl = document.getElementById('stripe-card-element');
