@@ -1379,6 +1379,16 @@
     align-items: start;
   }
 
+  @media (max-width: 700px) {
+    .deposit-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+    .deposit-info { display: none; }
+    .deposit-card { order: 1; width: 100%; box-sizing: border-box; }
+    .deposit { padding: 48px 20px !important; }
+    .deposit-inner { max-width: 100%; }
+    .deposit-form-group input,
+    .deposit-form-group select { font-size: 16px; }
+  }
+
   .deposit-info h3 {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
@@ -1563,6 +1573,23 @@
   }
 
   .stripe-badge svg { width: 38px; height: auto; }
+
+
+  /* ── SMALL MOBILE (480px) ── */
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 44px; }
+    .strip-item { width: 100%; }
+    .steps { grid-template-columns: 1fr !important; }
+    .deposit-card { padding: 24px 20px; }
+    .deposit-amount { font-size: 40px; }
+    .deposit-info p { font-size: 14px; }
+    .deposit-info h3 { font-size: 18px; }
+    .section-title { font-size: 36px !important; }
+    .abn-strip { font-size: 12px; }
+    .hero-cards { gap: 1px; }
+    .hero-card .num { font-size: 24px; }
+    .booking-form { grid-template-columns: 1fr; }
+  }
 
 </style>
   <!-- 
