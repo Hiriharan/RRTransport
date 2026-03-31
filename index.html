@@ -2087,7 +2087,7 @@
           </div>
           <div>
             <h4>Email</h4>
-            <a href="/cdn-cgi/l/email-protection#d8aaaaacaab9b6aba8b7aaacebe1fefbeeece3bfb5b9b1b4f6bbb7b5" style="color:#ffffff;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a>
+            <a href="mailto:rrtransport39&#64;gmail.com" style="color:#ffffff;text-decoration:none;">rrtransport39&#64;gmail&#46;com</a>
           </div>
         </div>
 
@@ -2280,7 +2280,7 @@
       <h5>Contact</h5>
       <ul>
         <li><a href="tel:+61478659152">0478 659 152</a></li>
-        <li><a href="/cdn-cgi/l/email-protection#e496969096858a97948b9690d7ddc2c7d2d0df8389858d88ca878b89" style="color:rgba(255,255,255,0.75);text-decoration:none;">rrtransport39&#64;gmail&#46;com</a></li>
+        <li><a href="mailto:rrtransport39&#64;gmail.com" style="color:rgba(255,255,255,0.75);text-decoration:none;">rrtransport39&#64;gmail&#46;com</a></li>
         <li><a href="#">Oxley Park, NSW</a></li>
         <li><a href="#">ACN: 694 839 051</a></li>
       </ul>
@@ -2293,7 +2293,7 @@
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ── SLIDESHOW ──
 window.addEventListener('load', function() {
   var si = 0;
@@ -2330,8 +2330,8 @@ function openWhatsApp(msg) {
   window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
-// ── ENQUIRY FORM (Formspree + WhatsApp) ──
-async function handleFormSubmit(e) {
+// ── ENQUIRY FORM (Formspree + WhatsApp) — Promise-based, no async/await ──
+function handleFormSubmit(e) {
   e.preventDefault();
   var btn = document.getElementById('submit-btn');
   btn.textContent = 'Sending...';
@@ -2345,33 +2345,42 @@ async function handleFormSubmit(e) {
   var date      = document.getElementById('f-date').value;
   var message   = document.getElementById('f-message').value.trim();
 
-  try {
-    var form = document.getElementById('enquiry-form');
-    var data = new FormData(form);
-    var resp = await fetch('https://formspree.io/f/mzdkrgeq', {
-      method: 'POST', body: data,
-      headers: { 'Accept': 'application/json' }
-    });
+  var form = document.getElementById('enquiry-form');
+  var data = new FormData(form);
 
+  fetch('https://formspree.io/f/mzdkrgeq', {
+    method: 'POST',
+    body: data,
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(function(resp) {
     if (resp.ok) {
-      var waMsg = 'Hi Rithvin Rylan Transport! I'd like to enquire about a truck hire.\n\n' +
-        '*Name:* ' + firstName + ' ' + lastName + '\n' +
-        '*Phone:* ' + phone + '\n' +
-        '*Email:* ' + email + '\n' +
-        '*Hire Type:* ' + hireType + '\n' +
-        '*Preferred Date:* ' + date + '\n' +
-        (message ? '*Message:* ' + message : '');
+      var waMsg = 'Hi Rithvin Rylan Transport! Truck hire enquiry.' +
+        '
+
+*Name:* ' + firstName + ' ' + lastName +
+        '
+*Phone:* ' + phone +
+        '
+*Email:* ' + email +
+        '
+*Hire Type:* ' + hireType +
+        '
+*Date:* ' + date +
+        (message ? '
+*Message:* ' + message : '');
       openWhatsApp(waMsg);
       document.getElementById('enquiry-form').style.display = 'none';
       document.getElementById('form-success').style.display = 'block';
     } else {
-      throw new Error('error');
+      throw new Error('Form error');
     }
-  } catch(err) {
+  })
+  .catch(function() {
     btn.textContent = 'Send Enquiry →';
     btn.disabled = false;
-    alert('There was an issue. Please call us directly on 0478 659 152.');
-  }
+    alert('There was an issue. Please call us on 0478 659 152.');
+  });
 }
 
 // ── QUICK BOOKING BAR ──
@@ -2383,13 +2392,18 @@ function handleEnquiry(e) {
   if (!hireType || !pickup || !ret) { alert('Please fill in all fields.'); return; }
   var days = Math.ceil((new Date(ret) - new Date(pickup)) / (1000*60*60*24));
   if (days < 1) { alert('Return date must be after pick-up date.'); return; }
-  var waMsg = 'Hi Rithvin Rylan Transport! I'd like to check availability.\n\n' +
-    '*Hire Type:* ' + hireType + '\n' +
-    '*Pickup:* ' + pickup + '\n' +
-    '*Return:* ' + ret + '\n' +
-    '*Days:* ' + days + '\n' +
-    '*Est. cost:* $' + (days * 180) + ' (self-drive base)\n\n' +
-    'Please let me know if these dates are available!';
+  var waMsg = 'Hi Rithvin Rylan Transport! Availability check.' +
+    '
+
+*Hire Type:* ' + hireType +
+    '
+*Pickup:* ' + pickup +
+    '
+*Return:* ' + ret +
+    '
+*Days:* ' + days +
+    '
+*Est. cost:* $' + (days * 180) + ' base';
   openWhatsApp(waMsg);
 }
 
@@ -2403,7 +2417,6 @@ var _EDITABLE = [
   '.term-item p', '.review-text', '.review-name', '.review-meta',
   '.section-title', '.section-sub', '.contact-item p', '.contact-item a',
   '.footer-desc', 'footer ul li a', '.strip-item h4', '.strip-item p',
-  '.hero-card .lbl',
 ];
 
 function _showToast(msg) {
@@ -2426,7 +2439,7 @@ function enterEditMode() {
     });
   });
   _loadSaved();
-  _showToast('✏ Edit mode ON — click any orange-outlined text to edit');
+  _showToast('Edit mode ON — click any outlined text to edit');
 }
 
 function exitEditMode() {
@@ -2447,10 +2460,8 @@ function saveEdits() {
   });
   try {
     localStorage.setItem('rr_edits', JSON.stringify(saved));
-    _showToast('✅ Saved! Changes stored in this browser.');
-  } catch(e) {
-    _showToast('⚠️ Could not save — try a different browser.');
-  }
+    _showToast('Saved!');
+  } catch(e) { _showToast('Could not save.'); }
 }
 
 function _loadSaved() {
@@ -2477,10 +2488,10 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// ── STRIPE DEPOSIT ──
+// ── STRIPE DEPOSIT — Promise-based, no async/await ──
 (function() {
   var stripeLoaded = false;
-  var stripe, elements, card;
+  var stripe, card;
 
   function loadStripe() {
     if (stripeLoaded) return;
@@ -2492,29 +2503,25 @@ document.addEventListener('keydown', function(e) {
   }
 
   function initStripe() {
-    stripe = Stripe('pk_live_51Sudj1FgOT9qIaR1mpl3W3xt62L8TnJNRrDoXMLlzzGTMAgWgYhT3CCrnImQ0yhlyeE5jVIfp0hqyYas5hgyGovT00ZpxtuDzj');
-    elements = stripe.elements();
-
+    stripe = Stripe( + STRIPE_KEY + );
+    var elements = stripe.elements();
     var cardStyle = {
       base: {
-        fontFamily: "'Barlow', sans-serif",
+        fontFamily: 'Barlow, sans-serif',
         fontSize: '14px',
         color: '#1a1a1a',
         '::placeholder': { color: '#9a9890' }
       },
       invalid: { color: '#c23b2a' }
     };
-
     card = elements.create('card', { style: cardStyle, hidePostalCode: true });
     card.mount('#stripe-card-element');
-
     card.on('change', function(e) {
       document.getElementById('stripe-card-errors').textContent = e.error ? e.error.message : '';
     });
 
-    document.getElementById('deposit-form').addEventListener('submit', async function(e) {
+    document.getElementById('deposit-form').addEventListener('submit', function(e) {
       e.preventDefault();
-
       var name     = document.getElementById('dep-name').value.trim();
       var email    = document.getElementById('dep-email').value.trim();
       var phone    = document.getElementById('dep-phone').value.trim();
@@ -2522,67 +2529,65 @@ document.addEventListener('keydown', function(e) {
       var date     = document.getElementById('dep-date').value;
 
       if (!name || !email || !phone || !hireType || !date) {
-        alert('Please fill in all fields before paying.');
+        alert('Please fill in all fields.');
         return;
       }
 
       var btn = document.getElementById('deposit-submit-btn');
       btn.disabled = true;
-      btn.textContent = '⏳ Processing...';
+      btn.textContent = 'Processing...';
       document.getElementById('stripe-card-errors').textContent = '';
 
-      try {
-        // Step 1: Create PaymentIntent on the server
-        var response = await fetch('/api/create-payment-intent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, phone, hireType, date })
-        });
-
-        var data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Server error');
-        }
-
-        // Step 2: Confirm the payment with the card element
-        var result = await stripe.confirmCardPayment(data.clientSecret, {
+      // Step 1: Create PaymentIntent on server
+      fetch('/api/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, email: email, phone: phone, hireType: hireType, date: date })
+      })
+      .then(function(resp) { return resp.json(); })
+      .then(function(data) {
+        if (data.error) throw new Error(data.error);
+        // Step 2: Confirm card payment
+        return stripe.confirmCardPayment(data.clientSecret, {
           payment_method: {
             card: card,
             billing_details: { name: name, email: email, phone: phone }
           }
         });
-
+      })
+      .then(function(result) {
         if (result.error) {
           document.getElementById('stripe-card-errors').textContent = result.error.message;
           btn.disabled = false;
-          btn.innerHTML = '🔒 Pay $100 Deposit';
+          btn.textContent = 'Pay $100 Deposit';
         } else if (result.paymentIntent.status === 'succeeded') {
-          // Payment successful!
           document.getElementById('deposit-form').style.display = 'none';
           document.getElementById('deposit-success').style.display = 'block';
-
-          // Notify via WhatsApp
-          var waMsg = '💰 New $100 deposit received!\n\n' +
-            '*Name:* ' + name + '\n' +
-            '*Email:* ' + email + '\n' +
-            '*Phone:* ' + phone + '\n' +
-            '*Hire Type:* ' + hireType + '\n' +
-            '*Pickup Date:* ' + date + '\n' +
-            '*Payment ID:* ' + result.paymentIntent.id + '\n' +
-            '*Status:* ✅ PAID\n\n' +
-            'Money is in your Stripe account!';
+          var waMsg = 'New $100 deposit PAID!' +
+            '
+*Name:* ' + name +
+            '
+*Email:* ' + email +
+            '
+*Phone:* ' + phone +
+            '
+*Hire:* ' + hireType +
+            '
+*Date:* ' + date +
+            '
+*ID:* ' + result.paymentIntent.id;
           openWhatsApp(waMsg);
         }
-      } catch(err) {
+      })
+      .catch(function(err) {
         document.getElementById('stripe-card-errors').textContent = err.message || 'Payment failed. Please try again.';
         btn.disabled = false;
-        btn.innerHTML = '🔒 Pay $100 Deposit';
-      }
+        btn.textContent = 'Pay $100 Deposit';
+      });
     });
   }
 
-  // Load Stripe when deposit section scrolls into view
+  // Load Stripe when deposit section is visible
   var depSection = document.getElementById('deposit');
   if (depSection) {
     var obs = new IntersectionObserver(function(entries) {
@@ -2590,7 +2595,6 @@ document.addEventListener('keydown', function(e) {
     }, { threshold: 0.1 });
     obs.observe(depSection);
   }
-
   var depLink = document.querySelector('a[href="#deposit"]');
   if (depLink) depLink.addEventListener('click', function() { setTimeout(loadStripe, 100); });
 })();
