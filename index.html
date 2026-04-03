@@ -1379,16 +1379,6 @@
     align-items: start;
   }
 
-  @media (max-width: 700px) {
-    .deposit-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
-    .deposit-info { display: none; }
-    .deposit-card { order: 1; width: 100%; box-sizing: border-box; }
-    .deposit { padding: 48px 20px !important; }
-    .deposit-inner { max-width: 100%; }
-    .deposit-form-group input,
-    .deposit-form-group select { font-size: 16px; }
-  }
-
   .deposit-info h3 {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
@@ -1575,21 +1565,54 @@
   .stripe-badge svg { width: 38px; height: auto; }
 
 
-  /* ── SMALL MOBILE (480px) ── */
-  @media (max-width: 480px) {
-    .hero h1 { font-size: 44px; }
-    .strip-item { width: 100%; }
-    .steps { grid-template-columns: 1fr !important; }
-    .deposit-card { padding: 24px 20px; }
-    .deposit-amount { font-size: 40px; }
-    .deposit-info p { font-size: 14px; }
-    .deposit-info h3 { font-size: 18px; }
-    .section-title { font-size: 36px !important; }
-    .abn-strip { font-size: 12px; }
-    .hero-cards { gap: 1px; }
-    .hero-card .num { font-size: 24px; }
-    .booking-form { grid-template-columns: 1fr; }
+  /* ── AVAILABILITY RESULT ── */
+  .avail-result {
+    display: none;
+    margin-top: 16px;
+    padding: 14px 20px;
+    border-radius: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
   }
+  .avail-result.show { display: flex; }
+  .avail-result.available {
+    background: rgba(34,197,94,0.12);
+    border: 1.5px solid rgba(34,197,94,0.4);
+    color: #4ade80;
+  }
+  .avail-result.unavailable {
+    background: rgba(220,38,38,0.1);
+    border: 1.5px solid rgba(220,38,38,0.35);
+    color: #f87171;
+  }
+  .avail-result.checking {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6);
+  }
+  .avail-deposit-btn {
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+    margin-left: auto;
+  }
+  .avail-deposit-btn:hover { background: #15803d; color: white; }
 
 </style>
   <!-- 
@@ -1741,8 +1764,8 @@
 <!-- BOOKING BAR -->
 <div class="booking-section" id="book">
   <div style="max-width:1100px;margin:0 auto">
-    <h2>Quick Enquiry</h2>
-    <form class="booking-form" onsubmit="handleEnquiry(event)">
+    <h2>Check Availability</h2>
+    <form class="booking-form" onsubmit="checkAvailability(event)" id="avail-form">
       <div class="form-group">
         <label>Hire Type</label>
         <select id="hire-type">
@@ -1761,12 +1784,16 @@
       </div>
       <div class="form-group">
         <label>Your Phone</label>
-        <input type="tel" placeholder="04XX XXX XXX">
+        <input type="tel" id="avail-phone" placeholder="04XX XXX XXX">
       </div>
       <div>
-        <button type="submit" class="btn-primary" style="white-space:nowrap">Check Availability</button>
+        <button type="submit" id="avail-btn" class="btn-primary" style="white-space:nowrap">Check Availability</button>
       </div>
     </form>
+    <div class="avail-result" id="avail-result">
+      <span id="avail-msg"></span>
+      <a href="#deposit" class="avail-deposit-btn" id="avail-deposit-btn" style="display:none">Pay $100 Deposit →</a>
+    </div>
   </div>
 </div>
 
@@ -1837,7 +1864,7 @@
           <div class="price-block">
             <div class="price-from">From</div>
             <div class="price-main">$180<span>/day</span></div>
-            <div class="price-note">+$30/km over 150km</div>
+            <div class="price-note">+$0.30/km over 150km</div>
           </div>
           <a href="#contact" class="btn-primary" style="padding:12px 22px;font-size:13px">Book Now</a>
         </div>
@@ -1858,7 +1885,7 @@
           <div class="price-block">
             <div class="price-from">From</div>
             <div class="price-main">$180<span>/day</span></div>
-            <div class="price-note">+$30/km over 150km</div>
+            <div class="price-note">+$0.30/km over 150km</div>
           </div>
           <a href="#contact" class="btn-primary" style="padding:12px 22px;font-size:13px">Book Now</a>
         </div>
@@ -1879,7 +1906,7 @@
           <div class="price-block">
             <div class="price-from">From</div>
             <div class="price-main">$180<span>/day</span></div>
-            <div class="price-note">+$30/km over 150km</div>
+            <div class="price-note">+$0.30/km over 150km</div>
           </div>
           <a href="#contact" class="btn-primary" style="padding:12px 22px;font-size:13px">Book Now</a>
         </div>
@@ -1900,7 +1927,7 @@
           <div class="price-block">
             <div class="price-from">From</div>
             <div class="price-main">$180<span>/day</span></div>
-            <div class="price-note">+$30/km over 150km</div>
+            <div class="price-note">+$0.30/km over 150km</div>
           </div>
           <a href="#contact" class="btn-primary" style="padding:12px 22px;font-size:13px">Book Now</a>
         </div>
@@ -1922,7 +1949,7 @@
         <div class="price-period">per day</div>
         <ul class="price-features">
           <li>150 km included per day</li>
-          <li>$30 / km additional</li>
+          <li>$0.30 / km additional</li>
           <li>Full to full fuel policy</li>
           <li>Valid NSW licence required</li>
           <li>Hirer responsible for tolls & fines</li>
@@ -2149,10 +2176,24 @@
       } else if (result.paymentIntent.status === 'succeeded') {
         form.style.display = 'none';
         document.getElementById('deposit-success').style.display = 'block';
-        var waMsg = '💰 $100 deposit PAID!\n*Name:* ' + name +
+
+        // Create Google Calendar booking event
+        fetch('/api/confirm-booking', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name, email: email, phone: phone,
+            hireType: hireType, pickup: date,
+            returnDate: date,
+            paymentIntentId: result.paymentIntent.id
+          })
+        }).catch(function(e) { console.error('Calendar booking error:', e); });
+
+        // WhatsApp notification
+        var waMsg = '💰 $100 deposit PAID! Calendar event created.\n*Name:* ' + name +
           '\n*Email:* ' + email + '\n*Phone:* ' + phone +
           '\n*Hire:* ' + hireType + '\n*Date:* ' + date +
-          '\n*ID:* ' + result.paymentIntent.id;
+          '\n*Hire Type:* ' + hireType + '\n*Pickup Date:* ' + date + '\n*Rate:* $180/day + $0.30/km over 150km' + '\n*Payment ID:* ' + result.paymentIntent.id;
         if (typeof openWhatsApp === 'function') openWhatsApp(waMsg);
       }
     })
@@ -2430,6 +2471,77 @@ window.addEventListener('load', function() {
   }
 });
 
+
+// ── CHECK AVAILABILITY via Google Calendar API ──
+function checkAvailability(e) {
+  e.preventDefault();
+  var hireType = document.getElementById('hire-type').value;
+  var pickup   = document.getElementById('pickup-date').value;
+  var ret      = document.getElementById('return-date').value;
+  var phone    = document.getElementById('avail-phone').value.trim();
+
+  if (!hireType || !pickup || !ret) {
+    alert('Please select hire type and both dates.');
+    return;
+  }
+  if (new Date(ret) <= new Date(pickup)) {
+    alert('Return date must be after pick-up date.');
+    return;
+  }
+
+  var btn    = document.getElementById('avail-btn');
+  var result = document.getElementById('avail-result');
+  var msg    = document.getElementById('avail-msg');
+  var depBtn = document.getElementById('avail-deposit-btn');
+
+  btn.disabled = true;
+  btn.textContent = 'Checking...';
+  result.className = 'avail-result show checking';
+  msg.textContent = 'Checking your dates on our calendar...';
+  depBtn.style.display = 'none';
+
+  fetch('/api/check-availability', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pickup: pickup, returnDate: ret, hireType: hireType })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    btn.disabled = false;
+    btn.textContent = 'Check Availability';
+
+    if (data.available) {
+      var days = Math.ceil((new Date(ret) - new Date(pickup)) / (1000*60*60*24));
+      result.className = 'avail-result show available';
+      msg.textContent = '✅ Available! ' + days + ' day' + (days > 1 ? 's' : '') +
+        ' — est. $' + (days * 180) + ' · Secure your dates with a $100 deposit.';
+      depBtn.style.display = 'inline-block';
+
+      // Pre-fill deposit form fields
+      var depHire  = document.getElementById('dep-hire');
+      var depDate  = document.getElementById('dep-date');
+      var depPhone = document.getElementById('dep-phone');
+      if (depHire)  depHire.value  = hireType;
+      if (depDate)  depDate.value  = pickup;
+      if (depPhone && phone) depPhone.value = phone;
+    } else {
+      result.className = 'avail-result show unavailable';
+      msg.textContent = '❌ Sorry, ' + data.conflictDate + ' is already booked. Please choose different dates.';
+      depBtn.style.display = 'none';
+      // Trigger WhatsApp for alternate dates
+      var waMsg = 'Hi RR Transport — the dates ' + pickup + ' to ' + ret + ' are unavailable. Can you suggest alternate dates?';
+      setTimeout(function() { openWhatsApp(waMsg); }, 1500);
+    }
+  })
+  .catch(function(err) {
+    btn.disabled = false;
+    btn.textContent = 'Check Availability';
+    result.className = 'avail-result show checking';
+    msg.textContent = 'Could not check calendar — please call 0478 659 152 directly.';
+    console.error('Availability check error:', err);
+  });
+}
+
 // ── WHATSAPP ──
 var WA_NUMBER = '61478659152';
 function openWhatsApp(msg) {
@@ -2461,20 +2573,15 @@ function handleFormSubmit(e) {
   })
   .then(function(resp) {
     if (resp.ok) {
-      var waMsg = 'Hi Rithvin Rylan Transport! Truck hire enquiry.' +
-        '
-
-*Name:* ' + firstName + ' ' + lastName +
-        '
-*Phone:* ' + phone +
-        '
-*Email:* ' + email +
-        '
-*Hire Type:* ' + hireType +
-        '
-*Date:* ' + date +
-        (message ? '
-*Message:* ' + message : '');
+      var waMsg = '🚛 New hire enquiry from RR Transport website!' +
+        '\n\n*Name:* ' + firstName + ' ' + lastName +
+        '\n*Phone:* ' + phone +
+        '\n*Email:* ' + email +
+        '\n*Hire Type:* ' + hireType +
+        '\n*Preferred Date:* ' + date +
+        '\n*Rate:* $180/day · 150km incl. · $0.30/km extra' +
+        (message ? '\n*Message:* ' + message : '') +
+        '\n\nPlease follow up ASAP!';
       openWhatsApp(waMsg);
       document.getElementById('enquiry-form').style.display = 'none';
       document.getElementById('form-success').style.display = 'block';
@@ -2498,7 +2605,8 @@ function handleEnquiry(e) {
   if (!hireType || !pickup || !ret) { alert('Please fill in all fields.'); return; }
   var days = Math.ceil((new Date(ret) - new Date(pickup)) / (1000*60*60*24));
   if (days < 1) { alert('Return date must be after pick-up date.'); return; }
-  var waMsg = 'Hi Rithvin Rylan Transport! Availability check.' +
+  var phone = document.getElementById('avail-phone') ? document.getElementById('avail-phone').value.trim() : '';
+  var waMsg = '📅 Availability check from website!' +
     '
 
 *Hire Type:* ' + hireType +
@@ -2507,9 +2615,16 @@ function handleEnquiry(e) {
     '
 *Return:* ' + ret +
     '
-*Days:* ' + days +
+*Days:* ' + days + ' day' + (days > 1 ? 's' : '') +
     '
-*Est. cost:* $' + (days * 180) + ' base';
+*Est. cost:* $' + (days * 180) + ' base rate' +
+    '
+*Extra km:* $0.30/km over 150km/day' +
+    (phone ? '
+*Phone:* ' + phone : '') +
+    '
+
+Please confirm if available!';
   openWhatsApp(waMsg);
 }
 
