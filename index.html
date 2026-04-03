@@ -2500,6 +2500,25 @@ function checkAvailability(e) {
   msg.textContent = 'Checking your dates on our calendar...';
   depBtn.style.display = 'none';
 
+  // Open WhatsApp IMMEDIATELY with enquiry details (direct user gesture)
+  var phone = document.getElementById('avail-phone') ? document.getElementById('avail-phone').value.trim() : '';
+  var days = Math.ceil((new Date(ret) - new Date(pickup)) / (1000*60*60*24));
+  var waMsg = '📅 Availability check from RR Transport website!' +
+    '\n\n*Hire Type:* ' + hireType +
+    '\n*Pickup:* ' + pickup +
+    '\n*Return:* ' + ret +
+    '\n*Duration:* ' + days + ' day' + (days > 1 ? 's' : '') +
+    '\n*Est. cost:* $' + (days * 180) + ' base rate' +
+    '\n*Extra km:* $0.30/km over 150km/day' +
+    (phone ? '\n*Phone:* ' + phone : '') +
+    '\n\nPlease confirm if available!';
+  openWhatsApp(waMsg);
+
+  // Then check Google Calendar in background
+  result.className = 'avail-result show checking';
+  msg.textContent = 'Checking calendar...';
+  depBtn.style.display = 'none';
+
   fetch('/api/check-availability', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -2511,13 +2530,11 @@ function checkAvailability(e) {
     btn.textContent = 'Check Availability';
 
     if (data.available) {
-      var days = Math.ceil((new Date(ret) - new Date(pickup)) / (1000*60*60*24));
       result.className = 'avail-result show available';
       msg.textContent = '✅ Available! ' + days + ' day' + (days > 1 ? 's' : '') +
         ' — est. $' + (days * 180) + ' · Secure your dates with a $100 deposit.';
       depBtn.style.display = 'inline-block';
 
-      // Pre-fill deposit form fields
       var depHire  = document.getElementById('dep-hire');
       var depDate  = document.getElementById('dep-date');
       var depPhone = document.getElementById('dep-phone');
@@ -2526,19 +2543,16 @@ function checkAvailability(e) {
       if (depPhone && phone) depPhone.value = phone;
     } else {
       result.className = 'avail-result show unavailable';
-      msg.textContent = '❌ Sorry, ' + data.conflictDate + ' is already booked. Please choose different dates.';
+      msg.textContent = '❌ Sorry, ' + (data.conflictDate || 'those dates are') + ' already booked. Please choose different dates.';
       depBtn.style.display = 'none';
-      // Trigger WhatsApp for alternate dates
-      var waMsg = 'Hi RR Transport — the dates ' + pickup + ' to ' + ret + ' are unavailable. Can you suggest alternate dates?';
-      setTimeout(function() { openWhatsApp(waMsg); }, 1500);
     }
   })
   .catch(function(err) {
     btn.disabled = false;
     btn.textContent = 'Check Availability';
-    result.className = 'avail-result show checking';
-    msg.textContent = 'Could not check calendar — please call 0478 659 152 directly.';
-    console.error('Availability check error:', err);
+    result.className = 'avail-result show available';
+    msg.textContent = 'WhatsApp sent! We will confirm your dates shortly.';
+    console.error('Calendar check error:', err);
   });
 }
 
@@ -2551,9 +2565,6 @@ function openWhatsApp(msg) {
 // ── ENQUIRY FORM (Formspree + WhatsApp) — Promise-based, no async/await ──
 function handleFormSubmit(e) {
   e.preventDefault();
-  var btn = document.getElementById('submit-btn');
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
 
   var firstName = document.getElementById('f-firstname').value.trim();
   var lastName  = document.getElementById('f-lastname').value.trim();
@@ -2563,36 +2574,35 @@ function handleFormSubmit(e) {
   var date      = document.getElementById('f-date').value;
   var message   = document.getElementById('f-message').value.trim();
 
+  if (!firstName || !phone || !email || !hireType) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+
+  // STEP 1: Open WhatsApp IMMEDIATELY (must be direct user gesture — no async delay)
+  var waMsg = '🚛 New hire enquiry from RR Transport website!' +
+    '\n\n*Name:* ' + firstName + ' ' + lastName +
+    '\n*Phone:* ' + phone +
+    '\n*Email:* ' + email +
+    '\n*Hire Type:* ' + hireType +
+    '\n*Preferred Date:* ' + date +
+    '\n*Rate:* $180/day · 150km incl. · $0.30/km extra' +
+    (message ? '\n*Message:* ' + message : '') +
+    '\n\nPlease follow up ASAP!';
+  openWhatsApp(waMsg);
+
+  // STEP 2: Show success and send Formspree email in background
+  document.getElementById('enquiry-form').style.display = 'none';
+  document.getElementById('form-success').style.display = 'block';
+
   var form = document.getElementById('enquiry-form');
   var data = new FormData(form);
-
   fetch('https://formspree.io/f/mzdkrgeq', {
     method: 'POST',
     body: data,
     headers: { 'Accept': 'application/json' }
-  })
-  .then(function(resp) {
-    if (resp.ok) {
-      var waMsg = '🚛 New hire enquiry from RR Transport website!' +
-        '\n\n*Name:* ' + firstName + ' ' + lastName +
-        '\n*Phone:* ' + phone +
-        '\n*Email:* ' + email +
-        '\n*Hire Type:* ' + hireType +
-        '\n*Preferred Date:* ' + date +
-        '\n*Rate:* $180/day · 150km incl. · $0.30/km extra' +
-        (message ? '\n*Message:* ' + message : '') +
-        '\n\nPlease follow up ASAP!';
-      openWhatsApp(waMsg);
-      document.getElementById('enquiry-form').style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
-    } else {
-      throw new Error('Form error');
-    }
-  })
-  .catch(function() {
-    btn.textContent = 'Send Enquiry →';
-    btn.disabled = false;
-    alert('There was an issue. Please call us on 0478 659 152.');
+  }).catch(function() {
+    console.log('Formspree fallback - enquiry already sent via WhatsApp');
   });
 }
 
