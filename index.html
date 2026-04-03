@@ -1360,259 +1360,24 @@
   }
 
 
-  /* ── STRIPE DEPOSIT SECTION ── */
-  .deposit {
-    background: var(--off-white);
-    padding: 90px 48px;
-  }
-
-  .deposit-inner {
-    max-width: 860px;
-    margin: 0 auto;
-  }
-
-  .deposit-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    margin-top: 48px;
-    align-items: start;
-  }
-
-  .deposit-info h3 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-    text-transform: uppercase;
-    color: var(--navy-dark);
-    margin-bottom: 16px;
-    letter-spacing: 0.5px;
-  }
-
-  .deposit-info p {
-    font-size: 14px;
-    color: var(--gray-mid);
-    font-weight: 300;
-    line-height: 1.7;
-    margin-bottom: 12px;
-  }
-
-  .deposit-features {
-    list-style: none;
-    margin-top: 16px;
-  }
-
-  .deposit-features li {
-    font-size: 13px;
-    color: var(--gray-dark);
-    padding: 7px 0;
-    border-bottom: 1px solid var(--gray-light);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .deposit-features li::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--orange);
-    flex-shrink: 0;
-  }
-
-  .deposit-card {
-    background: var(--white);
-    border-radius: 12px;
-    padding: 32px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-    border: 1.5px solid var(--gray-light);
-    border-top: 4px solid var(--orange);
-  }
-
-  .deposit-card h4 {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
-    text-transform: uppercase;
-    color: var(--navy-dark);
-    margin-bottom: 6px;
-    letter-spacing: 0.5px;
-  }
-
-  .deposit-amount {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900;
-    font-size: 48px;
-    color: var(--orange);
-    line-height: 1;
-    margin: 12px 0 4px;
-  }
-
-  .deposit-note {
-    font-size: 12px;
-    color: var(--gray-mid);
-    margin-bottom: 24px;
-  }
-
-  .deposit-form-group {
-    margin-bottom: 14px;
-  }
-
-  .deposit-form-group label {
-    display: block;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--gray-mid);
-    margin-bottom: 6px;
-  }
-
-  .deposit-form-group input,
-  .deposit-form-group select {
-    width: 100%;
-    border: 1.5px solid var(--gray-light);
-    border-radius: 6px;
-    padding: 10px 14px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    color: var(--text);
-    background: var(--white);
-    outline: none;
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
-  }
-
-  .deposit-form-group input:focus,
-  .deposit-form-group select:focus {
-    border-color: var(--orange);
-  }
-
-  #stripe-card-element {
-    border: 1.5px solid var(--gray-light);
-    border-radius: 6px;
-    padding: 12px 14px;
-    background: var(--white);
-    transition: border-color 0.2s;
-  }
-
-  #stripe-card-element.StripeElement--focus {
-    border-color: var(--orange);
-  }
-
-  #stripe-card-errors {
-    color: #c23b2a;
-    font-size: 12px;
-    margin-top: 6px;
-    min-height: 18px;
-  }
-
-  #deposit-submit-btn {
-    width: 100%;
-    background: var(--orange);
-    color: white;
-    border: none;
-    padding: 14px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 16px;
-    transition: background 0.2s, opacity 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  #deposit-submit-btn:hover { background: var(--orange-light); }
-  #deposit-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-  #deposit-success {
-    display: none;
-    background: rgba(34,197,94,0.1);
-    border: 1px solid rgba(34,197,94,0.3);
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    margin-top: 16px;
-  }
-
-  #deposit-success p {
-    color: #16a34a;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .stripe-badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 14px;
-    font-size: 11px;
-    color: var(--gray-mid);
-  }
-
-  .stripe-badge svg { width: 38px; height: auto; }
+  
 
 
-  /* ── AVAILABILITY RESULT ── */
-  .avail-result {
-    display: none;
-    margin-top: 16px;
-    padding: 14px 20px;
-    border-radius: 6px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+  /* ── SMALL MOBILE (480px) ── */
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 44px; }
+    .strip-item { width: 100%; }
+    .steps { grid-template-columns: 1fr !important; }
+    .deposit-card { padding: 24px 20px; }
+    .deposit-amount { font-size: 40px; }
+    .deposit-info p { font-size: 14px; }
+    .deposit-info h3 { font-size: 18px; }
+    .section-title { font-size: 36px !important; }
+    .abn-strip { font-size: 12px; }
+    .hero-cards { gap: 1px; }
+    .hero-card .num { font-size: 24px; }
+    .booking-form { grid-template-columns: 1fr; }
   }
-  .avail-result.show { display: flex; }
-  .avail-result.available {
-    background: rgba(34,197,94,0.12);
-    border: 1.5px solid rgba(34,197,94,0.4);
-    color: #4ade80;
-  }
-  .avail-result.unavailable {
-    background: rgba(220,38,38,0.1);
-    border: 1.5px solid rgba(220,38,38,0.35);
-    color: #f87171;
-  }
-  .avail-result.checking {
-    background: rgba(255,255,255,0.05);
-    border: 1.5px solid rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.6);
-  }
-  .avail-deposit-btn {
-    background: #16a34a;
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: background 0.2s;
-    margin-left: auto;
-  }
-  .avail-deposit-btn:hover { background: #15803d; color: white; }
 
 </style>
   <!-- 
@@ -1620,7 +1385,6 @@
     { "headers": [{ "source": "/(.*)", "headers": [{ "key": "cf-mitigate", "value": "disable" }] }] }
     to prevent Cloudflare email obfuscation if using Cloudflare proxy.
   -->
-  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
 
@@ -1639,7 +1403,6 @@
     <li><a href="#how">How It Works</a></li>
     
     <li><a href="#reviews">Reviews</a></li>
-    <li><a href="#deposit">Pay Deposit</a></li>
     <li><a href="#contact" class="nav-phone">📞 0478 659 152</a></li>
   </ul>
 </nav>
@@ -1764,8 +1527,8 @@
 <!-- BOOKING BAR -->
 <div class="booking-section" id="book">
   <div style="max-width:1100px;margin:0 auto">
-    <h2>Check Availability</h2>
-    <form class="booking-form" onsubmit="checkAvailability(event)" id="avail-form">
+    <h2>Quick Enquiry</h2>
+    <form class="booking-form" onsubmit="handleEnquiry(event)">
       <div class="form-group">
         <label>Hire Type</label>
         <select id="hire-type">
@@ -1784,16 +1547,12 @@
       </div>
       <div class="form-group">
         <label>Your Phone</label>
-        <input type="tel" id="avail-phone" placeholder="04XX XXX XXX">
+        <input type="tel" placeholder="04XX XXX XXX">
       </div>
       <div>
-        <button type="submit" id="avail-btn" class="btn-primary" style="white-space:nowrap">Check Availability</button>
+        <button type="submit" class="btn-primary" style="white-space:nowrap">Check Availability</button>
       </div>
     </form>
-    <div class="avail-result" id="avail-result">
-      <span id="avail-msg"></span>
-      <a href="#deposit" class="avail-deposit-btn" id="avail-deposit-btn" style="display:none">Pay $100 Deposit →</a>
-    </div>
   </div>
 </div>
 
@@ -1864,7 +1623,7 @@
           <div class="price-block">
             <div class="price-from">From</div>
             <div class="price-main">$180<span>/day</span></div>
-            <div class="price-note">+$0.30/km over 150km</div>
+            <div class="price-note">+$30/km over 150km</div>
           </div>
           <a href="#contact" class="btn-primary" style="padding:12px 22px;font-size:13px">Book Now</a>
         </div>
@@ -1885,7 +1644,7 @@
           <div class="price-block">
             <div class="price-from">From</div>
             <div class="price-main">$180<span>/day</span></div>
-            <div class="price-note">+$0.30/km over 150km</div>
+            <div class="price-note">+$30/km over 150km</div>
           </div>
           <a href="#contact" class="btn-primary" style="padding:12px 22px;font-size:13px">Book Now</a>
         </div>
@@ -1906,7 +1665,7 @@
           <div class="price-block">
             <div class="price-from">From</div>
             <div class="price-main">$180<span>/day</span></div>
-            <div class="price-note">+$0.30/km over 150km</div>
+            <div class="price-note">+$30/km over 150km</div>
           </div>
           <a href="#contact" class="btn-primary" style="padding:12px 22px;font-size:13px">Book Now</a>
         </div>
@@ -1927,7 +1686,7 @@
           <div class="price-block">
             <div class="price-from">From</div>
             <div class="price-main">$180<span>/day</span></div>
-            <div class="price-note">+$0.30/km over 150km</div>
+            <div class="price-note">+$30/km over 150km</div>
           </div>
           <a href="#contact" class="btn-primary" style="padding:12px 22px;font-size:13px">Book Now</a>
         </div>
@@ -1949,7 +1708,7 @@
         <div class="price-period">per day</div>
         <ul class="price-features">
           <li>150 km included per day</li>
-          <li>$0.30 / km additional</li>
+          <li>$30 / km additional</li>
           <li>Full to full fuel policy</li>
           <li>Valid NSW licence required</li>
           <li>Hirer responsible for tolls & fines</li>
@@ -1971,7 +1730,7 @@
 
       <div class="price-card anim">
         <div class="price-type">Additional Charges</div>
-        <div class="price-amount">$0.30</div>
+        <div class="price-amount">$30</div>
         <div class="price-period">per extra km</div>
         <ul class="price-features">
           <li>Bond held on booking</li>
@@ -2033,178 +1792,7 @@
 
 
 
-<!-- DEPOSIT PAYMENT -->
-<section class="deposit" id="deposit">
-  <div class="deposit-inner">
-    <div class="section-tag">Secure Online Payment</div>
-    <h2 class="section-title" style="color:var(--navy-dark)">Pay Your<br>Booking Deposit</h2>
 
-    <div class="deposit-grid">
-      <div class="deposit-info">
-        <h3>Why pay a deposit?</h3>
-        <p>A booking deposit secures your truck on your chosen date. It confirms your reservation and is deducted from your total hire cost on the day.</p>
-        <p>Deposits are processed securely via Stripe — your card details are never stored by us.</p>
-        <ul class="deposit-features">
-          <li>Secures your truck on your date</li>
-          <li>Deducted from total hire cost</li>
-          <li>Fully refundable if cancelled 48h prior</li>
-          <li>Secure SSL encrypted payment</li>
-          <li>Receipt sent to your email instantly</li>
-        </ul>
-      </div>
-
-      <div class="deposit-card">
-        <h4>Booking Deposit</h4>
-        <div class="deposit-amount">$100</div>
-        <div class="deposit-note">Deducted from your total on pickup day</div>
-
-        <div id="deposit-success">
-          <p>✅ Deposit paid! We'll be in touch to confirm your booking.</p>
-        </div>
-
-        <form id="deposit-form">
-          <div class="deposit-form-group">
-            <label>Your Name</label>
-            <input type="text" id="dep-name" placeholder="John Smith" required>
-          </div>
-          <div class="deposit-form-group">
-            <label>Email</label>
-            <input type="email" id="dep-email" placeholder="you@email.com" required>
-          </div>
-          <div class="deposit-form-group">
-            <label>Phone</label>
-            <input type="tel" id="dep-phone" placeholder="04XX XXX XXX" required>
-          </div>
-          <div class="deposit-form-group">
-            <label>Hire Type</label>
-            <select id="dep-hire">
-              <option value="">Select...</option>
-              <option>Self-Drive</option>
-              <option>With Driver</option>
-            </select>
-          </div>
-          <div class="deposit-form-group">
-            <label>Pickup Date</label>
-            <input type="date" id="dep-date" required>
-          </div>
-          <div class="deposit-form-group">
-            <label>Card Details</label>
-            <div id="stripe-card-element" style="min-height:48px;padding:2px 0;"></div>
-            <div id="stripe-card-errors"></div>
-          </div>
-
-          <button type="submit" id="deposit-submit-btn">
-            🔒 Pay $100 Deposit
-          </button>
-        </form>
-
-        <div class="stripe-badge">
-          Secured by
-          <svg viewBox="0 0 60 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5.5 9.8c0-.6.5-1 1.3-1 1.1 0 2.5.4 3.4 1V6.6c-1-.4-2.3-.6-3.4-.6C4 6 2 7.4 2 10c0 4 5.5 3.4 5.5 5.1 0 .7-.6 1-1.5 1-1.3 0-2.9-.6-4-1.3v3.3c1.2.5 2.7.8 4 .8 2.9 0 5-1.3 5-4-.1-4.3-5.5-3.6-5.5-5.1z" fill="#635BFF"/>
-            <path d="M15.5 4.5l-3.2.7v2.2h-1.7v2.7h1.7v5.1c0 2.3 1.1 3.1 3.5 3.1.9 0 1.7-.1 2.4-.3v-2.7c-.5.1-.9.2-1.4.2-.8 0-1.3-.3-1.3-1.1V10h2.7V7.4h-2.7V4.5z" fill="#635BFF"/>
-            <path d="M24.3 7.2c-2.8 0-4.8 2-4.8 5.1 0 3.4 2.2 5.1 5 5.1 1.5 0 2.7-.4 3.7-1.2l-1.4-2c-.7.5-1.5.8-2.2.8-1.2 0-2-.6-2.3-1.8h6.3c0-.3.1-.7.1-1.1 0-2.8-1.6-4.9-4.4-4.9zm-2 4c.2-1.1.9-1.8 2-1.8 1 0 1.7.7 1.8 1.8h-3.8z" fill="#635BFF"/>
-            <path d="M34.3 9.1V7.4h-3.1v9.8h3.2v-5c0-1.4.9-2 2.2-2 .4 0 .8 0 1.1.1V7.3c-.3-.1-.6-.1-.9-.1-1.2 0-2.1.7-2.5 1.9z" fill="#635BFF"/>
-            <path d="M39.5 5.5c0 1 .8 1.8 1.9 1.8s1.9-.8 1.9-1.8-.8-1.8-1.9-1.8-1.9.8-1.9 1.8zm.3 11.7h3.2V7.4h-3.2v9.8z" fill="#635BFF"/>
-            <path d="M51.7 7.2c-1.3 0-2.4.6-3 1.5V7.4H45.6v9.8h3.2v-5.5c0-1.2.7-2 1.9-2s1.8.8 1.8 2v5.5H55.7v-6c0-2.5-1.5-4-4-4z" fill="#635BFF"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<script>
-// Stripe card — runs inline, guaranteed after DOM element exists
-(function mountStripe() {
-  if (typeof Stripe === 'undefined') {
-    setTimeout(mountStripe, 200);
-    return;
-  }
-  var el = document.getElementById('stripe-card-element');
-  if (!el) { setTimeout(mountStripe, 200); return; }
-
-  var stripe = Stripe('pk_live_51Sudj1FgOT9qIaR1mpl3W3xt62L8TnJNRrDoXMLlzzGTMAgWgYhT3CCrnImQ0yhlyeE5jVIfp0hqyYas5hgyGovT00ZpxtuDzj');
-  var elements = stripe.elements();
-  var card = elements.create('card', {
-    hidePostalCode: true,
-    style: { base: { fontFamily: 'Barlow, sans-serif', fontSize: '15px', color: '#1a1a1a', '::placeholder': { color: '#999' } }, invalid: { color: '#c23b2a' } }
-  });
-  el.innerHTML = '';
-  card.mount('#stripe-card-element');
-
-  card.on('change', function(e) {
-    var errEl = document.getElementById('stripe-card-errors');
-    if (errEl) errEl.textContent = e.error ? e.error.message : '';
-  });
-
-  var form = document.getElementById('deposit-form');
-  if (!form) return;
-
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    var name     = document.getElementById('dep-name').value.trim();
-    var email    = document.getElementById('dep-email').value.trim();
-    var phone    = document.getElementById('dep-phone').value.trim();
-    var hireType = document.getElementById('dep-hire').value;
-    var date     = document.getElementById('dep-date').value;
-    if (!name||!email||!phone||!hireType||!date) { alert('Please fill in all fields.'); return; }
-
-    var btn = document.getElementById('deposit-submit-btn');
-    btn.disabled = true;
-    btn.textContent = 'Processing...';
-    document.getElementById('stripe-card-errors').textContent = '';
-
-    fetch('/api/create-payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name:name, email:email, phone:phone, hireType:hireType, date:date })
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.error) throw new Error(data.error);
-      return stripe.confirmCardPayment(data.clientSecret, {
-        payment_method: { card: card, billing_details: { name:name, email:email, phone:phone } }
-      });
-    })
-    .then(function(result) {
-      if (result.error) {
-        document.getElementById('stripe-card-errors').textContent = result.error.message;
-        btn.disabled = false;
-        btn.innerHTML = '🔒 Pay $100 Deposit';
-      } else if (result.paymentIntent.status === 'succeeded') {
-        form.style.display = 'none';
-        document.getElementById('deposit-success').style.display = 'block';
-
-        // Create Google Calendar booking event
-        fetch('/api/confirm-booking', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: name, email: email, phone: phone,
-            hireType: hireType, pickup: date,
-            returnDate: date,
-            paymentIntentId: result.paymentIntent.id
-          })
-        }).catch(function(e) { console.error('Calendar booking error:', e); });
-
-        // WhatsApp notification
-        var waMsg = '💰 $100 deposit PAID! Calendar event created.\n*Name:* ' + name +
-          '\n*Email:* ' + email + '\n*Phone:* ' + phone +
-          '\n*Hire:* ' + hireType + '\n*Date:* ' + date +
-          '\n*Hire Type:* ' + hireType + '\n*Pickup Date:* ' + date + '\n*Rate:* $180/day + $0.30/km over 150km' + '\n*Payment ID:* ' + result.paymentIntent.id;
-        if (typeof openWhatsApp === 'function') openWhatsApp(waMsg);
-      }
-    })
-    .catch(function(err) {
-      document.getElementById('stripe-card-errors').textContent = err.message || 'Payment failed.';
-      btn.disabled = false;
-      btn.innerHTML = '🔒 Pay $100 Deposit';
-    });
-  });
-})();
-</script>
 
 <!-- CONTACT -->
 <section class="contact" id="contact">
@@ -2471,77 +2059,6 @@ window.addEventListener('load', function() {
   }
 });
 
-
-// ── CHECK AVAILABILITY via Google Calendar API ──
-function checkAvailability(e) {
-  e.preventDefault();
-  var hireType = document.getElementById('hire-type').value;
-  var pickup   = document.getElementById('pickup-date').value;
-  var ret      = document.getElementById('return-date').value;
-  var phone    = document.getElementById('avail-phone').value.trim();
-
-  if (!hireType || !pickup || !ret) {
-    alert('Please select hire type and both dates.');
-    return;
-  }
-  if (new Date(ret) <= new Date(pickup)) {
-    alert('Return date must be after pick-up date.');
-    return;
-  }
-
-  var btn    = document.getElementById('avail-btn');
-  var result = document.getElementById('avail-result');
-  var msg    = document.getElementById('avail-msg');
-  var depBtn = document.getElementById('avail-deposit-btn');
-
-  btn.disabled = true;
-  btn.textContent = 'Checking...';
-  result.className = 'avail-result show checking';
-  msg.textContent = 'Checking your dates on our calendar...';
-  depBtn.style.display = 'none';
-
-  fetch('/api/check-availability', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ pickup: pickup, returnDate: ret, hireType: hireType })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    btn.disabled = false;
-    btn.textContent = 'Check Availability';
-
-    if (data.available) {
-      var days = Math.ceil((new Date(ret) - new Date(pickup)) / (1000*60*60*24));
-      result.className = 'avail-result show available';
-      msg.textContent = '✅ Available! ' + days + ' day' + (days > 1 ? 's' : '') +
-        ' — est. $' + (days * 180) + ' · Secure your dates with a $100 deposit.';
-      depBtn.style.display = 'inline-block';
-
-      // Pre-fill deposit form fields
-      var depHire  = document.getElementById('dep-hire');
-      var depDate  = document.getElementById('dep-date');
-      var depPhone = document.getElementById('dep-phone');
-      if (depHire)  depHire.value  = hireType;
-      if (depDate)  depDate.value  = pickup;
-      if (depPhone && phone) depPhone.value = phone;
-    } else {
-      result.className = 'avail-result show unavailable';
-      msg.textContent = '❌ Sorry, ' + data.conflictDate + ' is already booked. Please choose different dates.';
-      depBtn.style.display = 'none';
-      // Trigger WhatsApp for alternate dates
-      var waMsg = 'Hi RR Transport — the dates ' + pickup + ' to ' + ret + ' are unavailable. Can you suggest alternate dates?';
-      setTimeout(function() { openWhatsApp(waMsg); }, 1500);
-    }
-  })
-  .catch(function(err) {
-    btn.disabled = false;
-    btn.textContent = 'Check Availability';
-    result.className = 'avail-result show checking';
-    msg.textContent = 'Could not check calendar — please call 0478 659 152 directly.';
-    console.error('Availability check error:', err);
-  });
-}
-
 // ── WHATSAPP ──
 var WA_NUMBER = '61478659152';
 function openWhatsApp(msg) {
@@ -2573,15 +2090,20 @@ function handleFormSubmit(e) {
   })
   .then(function(resp) {
     if (resp.ok) {
-      var waMsg = '🚛 New hire enquiry from RR Transport website!' +
-        '\n\n*Name:* ' + firstName + ' ' + lastName +
-        '\n*Phone:* ' + phone +
-        '\n*Email:* ' + email +
-        '\n*Hire Type:* ' + hireType +
-        '\n*Preferred Date:* ' + date +
-        '\n*Rate:* $180/day · 150km incl. · $0.30/km extra' +
-        (message ? '\n*Message:* ' + message : '') +
-        '\n\nPlease follow up ASAP!';
+      var waMsg = 'Hi Rithvin Rylan Transport! Truck hire enquiry.' +
+        '
+
+*Name:* ' + firstName + ' ' + lastName +
+        '
+*Phone:* ' + phone +
+        '
+*Email:* ' + email +
+        '
+*Hire Type:* ' + hireType +
+        '
+*Date:* ' + date +
+        (message ? '
+*Message:* ' + message : '');
       openWhatsApp(waMsg);
       document.getElementById('enquiry-form').style.display = 'none';
       document.getElementById('form-success').style.display = 'block';
@@ -2605,8 +2127,7 @@ function handleEnquiry(e) {
   if (!hireType || !pickup || !ret) { alert('Please fill in all fields.'); return; }
   var days = Math.ceil((new Date(ret) - new Date(pickup)) / (1000*60*60*24));
   if (days < 1) { alert('Return date must be after pick-up date.'); return; }
-  var phone = document.getElementById('avail-phone') ? document.getElementById('avail-phone').value.trim() : '';
-  var waMsg = '📅 Availability check from website!' +
+  var waMsg = 'Hi Rithvin Rylan Transport! Availability check.' +
     '
 
 *Hire Type:* ' + hireType +
@@ -2615,16 +2136,9 @@ function handleEnquiry(e) {
     '
 *Return:* ' + ret +
     '
-*Days:* ' + days + ' day' + (days > 1 ? 's' : '') +
+*Days:* ' + days +
     '
-*Est. cost:* $' + (days * 180) + ' base rate' +
-    '
-*Extra km:* $0.30/km over 150km/day' +
-    (phone ? '
-*Phone:* ' + phone : '') +
-    '
-
-Please confirm if available!';
+*Est. cost:* $' + (days * 180) + ' base';
   openWhatsApp(waMsg);
 }
 
