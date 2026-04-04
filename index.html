@@ -2269,10 +2269,10 @@
           <p style="color:rgba(255,255,255,0.6);font-size:13px;">We've received your message and a WhatsApp notification has been sent. We'll be in touch shortly.</p>
         </div>
 
-        <form id="enquiry-form" action="https://formspree.io/f/mzdkrgeq" method="POST" onsubmit="handleFormSubmit(event)">
-          <!-- Hidden fields for Formspree -->
-          <input type="hidden" name="_subject" value="New Truck Hire Enquiry – RR Transport">
-          <input type="hidden" name="_replyto" id="hidden-email">
+        <form id="enquiry-form" onsubmit="handleFormSubmit(event)">
+          
+          
+          
 
           <div class="cf-grid">
             <div class="cf-group">
@@ -2478,82 +2478,45 @@ function checkAvailability(e) {
   var hireType = document.getElementById('hire-type').value;
   var pickup   = document.getElementById('pickup-date').value;
   var ret      = document.getElementById('return-date').value;
-  var phone    = document.getElementById('avail-phone').value.trim();
+  var phone    = document.getElementById('avail-phone') ? document.getElementById('avail-phone').value.trim() : '';
 
   if (!hireType || !pickup || !ret) {
     alert('Please select hire type and both dates.');
     return;
   }
-  if (new Date(ret) <= new Date(pickup)) {
-    alert('Return date must be after pick-up date.');
-    return;
-  }
 
-  var btn    = document.getElementById('avail-btn');
+  var days = Math.ceil((new Date(ret) - new Date(pickup)) / (1000*60*60*24));
+  if (days < 1) { alert('Return date must be after pick-up date.'); return; }
+
+  var waMsg =
+    '*RR Transport Availability Check*' +
+    '%0A%0A*Hire Type:* ' + encodeURIComponent(hireType) +
+    '%0A*Pickup:* ' + encodeURIComponent(pickup) +
+    '%0A*Return:* ' + encodeURIComponent(ret) +
+    '%0A*Duration:* ' + days + ' day' + (days > 1 ? 's' : '') +
+    '%0A*Est. Cost:* %24' + (days * 180) + ' base' +
+    '%0A*Extra km:* %240.30%2Fkm over 150km%2Fday' +
+    (phone ? '%0A*Phone:* ' + encodeURIComponent(phone) : '') +
+    '%0A%0APlease confirm if available!';
+
+  window.open('https://wa.me/61478659152?text=' + waMsg, '_blank');
+
+  // Show result
   var result = document.getElementById('avail-result');
   var msg    = document.getElementById('avail-msg');
   var depBtn = document.getElementById('avail-deposit-btn');
-
-  btn.disabled = true;
-  btn.textContent = 'Checking...';
-  result.className = 'avail-result show checking';
-  msg.textContent = 'Checking your dates on our calendar...';
-  depBtn.style.display = 'none';
-
-  // Open WhatsApp IMMEDIATELY with enquiry details (direct user gesture)
-  var phone = document.getElementById('avail-phone') ? document.getElementById('avail-phone').value.trim() : '';
-  var days = Math.ceil((new Date(ret) - new Date(pickup)) / (1000*60*60*24));
-  var waMsg = '📅 Availability check from RR Transport website!' +
-    '\n\n*Hire Type:* ' + hireType +
-    '\n*Pickup:* ' + pickup +
-    '\n*Return:* ' + ret +
-    '\n*Duration:* ' + days + ' day' + (days > 1 ? 's' : '') +
-    '\n*Est. cost:* $' + (days * 180) + ' base rate' +
-    '\n*Extra km:* $0.30/km over 150km/day' +
-    (phone ? '\n*Phone:* ' + phone : '') +
-    '\n\nPlease confirm if available!';
-  openWhatsApp(waMsg);
-
-  // Then check Google Calendar in background
-  result.className = 'avail-result show checking';
-  msg.textContent = 'Checking calendar...';
-  depBtn.style.display = 'none';
-
-  fetch('/api/check-availability', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ pickup: pickup, returnDate: ret, hireType: hireType })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    btn.disabled = false;
-    btn.textContent = 'Check Availability';
-
-    if (data.available) {
-      result.className = 'avail-result show available';
-      msg.textContent = '✅ Available! ' + days + ' day' + (days > 1 ? 's' : '') +
-        ' — est. $' + (days * 180) + ' · Secure your dates with a $100 deposit.';
-      depBtn.style.display = 'inline-block';
-
-      var depHire  = document.getElementById('dep-hire');
-      var depDate  = document.getElementById('dep-date');
-      var depPhone = document.getElementById('dep-phone');
-      if (depHire)  depHire.value  = hireType;
-      if (depDate)  depDate.value  = pickup;
-      if (depPhone && phone) depPhone.value = phone;
-    } else {
-      result.className = 'avail-result show unavailable';
-      msg.textContent = '❌ Sorry, ' + (data.conflictDate || 'those dates are') + ' already booked. Please choose different dates.';
-      depBtn.style.display = 'none';
-    }
-  })
-  .catch(function(err) {
-    btn.disabled = false;
-    btn.textContent = 'Check Availability';
+  if (result && msg) {
     result.className = 'avail-result show available';
-    msg.textContent = 'WhatsApp sent! We will confirm your dates shortly.';
-    console.error('Calendar check error:', err);
-  });
+    msg.textContent = '✅ WhatsApp opened! We will confirm your dates shortly. Est. $' + (days * 180) + ' for ' + days + ' day' + (days > 1 ? 's' : '') + '.';
+    if (depBtn) depBtn.style.display = 'inline-block';
+    // Pre-fill deposit form
+    var depHire  = document.getElementById('dep-hire');
+    var depDate  = document.getElementById('dep-date');
+    var depPhone = document.getElementById('dep-phone');
+    if (depHire) depHire.value = hireType;
+    if (depDate) depDate.value = pickup;
+    if (depPhone && phone) depPhone.value = phone;
+  }
 }
 
 // ── WHATSAPP ──
@@ -2562,7 +2525,7 @@ function openWhatsApp(msg) {
   window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
-// ── ENQUIRY FORM (Formspree + WhatsApp) — Promise-based, no async/await ──
+// ── ENQUIRY FORM — WhatsApp only ──
 function handleFormSubmit(e) {
   e.preventDefault();
 
@@ -2574,36 +2537,26 @@ function handleFormSubmit(e) {
   var date      = document.getElementById('f-date').value;
   var message   = document.getElementById('f-message').value.trim();
 
-  if (!firstName || !phone || !email || !hireType) {
-    alert('Please fill in all required fields.');
+  if (!firstName || !phone || !hireType) {
+    alert('Please fill in your name, phone and hire type.');
     return;
   }
 
-  // STEP 1: Open WhatsApp IMMEDIATELY (must be direct user gesture — no async delay)
-  var waMsg = '🚛 New hire enquiry from RR Transport website!' +
-    '\n\n*Name:* ' + firstName + ' ' + lastName +
-    '\n*Phone:* ' + phone +
-    '\n*Email:* ' + email +
-    '\n*Hire Type:* ' + hireType +
-    '\n*Preferred Date:* ' + date +
-    '\n*Rate:* $180/day · 150km incl. · $0.30/km extra' +
-    (message ? '\n*Message:* ' + message : '') +
-    '\n\nPlease follow up ASAP!';
-  openWhatsApp(waMsg);
+  var waMsg =
+    '*New RR Transport Enquiry*' +
+    '%0A%0A*Name:* ' + encodeURIComponent(firstName + ' ' + lastName) +
+    '%0A*Phone:* ' + encodeURIComponent(phone) +
+    '%0A*Email:* ' + encodeURIComponent(email || 'not provided') +
+    '%0A*Hire Type:* ' + encodeURIComponent(hireType) +
+    '%0A*Preferred Date:* ' + encodeURIComponent(date || 'flexible') +
+    '%0A*Rate:* %24180%2Fday %C2%B7 150km incl. %C2%B7 %240.30%2Fkm extra' +
+    (message ? '%0A*Message:* ' + encodeURIComponent(message) : '') +
+    '%0A%0APlease follow up ASAP!';
 
-  // STEP 2: Show success and send Formspree email in background
+  window.open('https://wa.me/61478659152?text=' + waMsg, '_blank');
+
   document.getElementById('enquiry-form').style.display = 'none';
   document.getElementById('form-success').style.display = 'block';
-
-  var form = document.getElementById('enquiry-form');
-  var data = new FormData(form);
-  fetch('https://formspree.io/f/mzdkrgeq', {
-    method: 'POST',
-    body: data,
-    headers: { 'Accept': 'application/json' }
-  }).catch(function() {
-    console.log('Formspree fallback - enquiry already sent via WhatsApp');
-  });
 }
 
 // ── QUICK BOOKING BAR ──
@@ -2612,30 +2565,28 @@ function handleEnquiry(e) {
   var hireType = document.getElementById('hire-type').value;
   var pickup   = document.getElementById('pickup-date').value;
   var ret      = document.getElementById('return-date').value;
-  if (!hireType || !pickup || !ret) { alert('Please fill in all fields.'); return; }
+  var phone    = document.getElementById('avail-phone') ? document.getElementById('avail-phone').value.trim() : '';
+
+  if (!hireType || !pickup || !ret) {
+    alert('Please fill in hire type and both dates.');
+    return;
+  }
+
   var days = Math.ceil((new Date(ret) - new Date(pickup)) / (1000*60*60*24));
   if (days < 1) { alert('Return date must be after pick-up date.'); return; }
-  var phone = document.getElementById('avail-phone') ? document.getElementById('avail-phone').value.trim() : '';
-  var waMsg = '📅 Availability check from website!' +
-    '
 
-*Hire Type:* ' + hireType +
-    '
-*Pickup:* ' + pickup +
-    '
-*Return:* ' + ret +
-    '
-*Days:* ' + days + ' day' + (days > 1 ? 's' : '') +
-    '
-*Est. cost:* $' + (days * 180) + ' base rate' +
-    '
-*Extra km:* $0.30/km over 150km/day' +
-    (phone ? '
-*Phone:* ' + phone : '') +
-    '
+  var waMsg =
+    '*RR Transport Availability Check*' +
+    '%0A%0A*Hire Type:* ' + encodeURIComponent(hireType) +
+    '%0A*Pickup:* ' + encodeURIComponent(pickup) +
+    '%0A*Return:* ' + encodeURIComponent(ret) +
+    '%0A*Duration:* ' + days + ' day' + (days > 1 ? 's' : '') +
+    '%0A*Est. Cost:* %24' + (days * 180) + ' base' +
+    '%0A*Extra km:* %240.30%2Fkm over 150km%2Fday' +
+    (phone ? '%0A*Phone:* ' + encodeURIComponent(phone) : '') +
+    '%0A%0APlease confirm if available!';
 
-Please confirm if available!';
-  openWhatsApp(waMsg);
+  window.open('https://wa.me/61478659152?text=' + waMsg, '_blank');
 }
 
 // ── EDIT MODE (Ctrl+Shift+E) ──
