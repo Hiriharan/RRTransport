@@ -1615,7 +1615,7 @@
   .avail-deposit-btn:hover { background: #15803d; color: white; }
 
 
-  /* ── HAMBURGER ── */
+  /* ── HAMBURGER TOP RIGHT ── */
   .hamburger {
     display: none;
     flex-direction: column;
@@ -1626,6 +1626,7 @@
     border: none;
     background: transparent;
     margin-left: auto;
+    flex-shrink: 0;
   }
   .hamburger span {
     display: block;
@@ -1639,11 +1640,12 @@
   .hamburger.open span:nth-child(2) { opacity: 0; }
   .hamburger.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
 
+  /* ── MOBILE FULLSCREEN MENU ── */
   .mobile-menu {
     display: none;
     position: fixed;
     top: 70px; left: 0; right: 0; bottom: 0;
-    background: var(--navy-dark);
+    background: #111e45;
     z-index: 999;
     flex-direction: column;
     align-items: center;
@@ -1664,11 +1666,11 @@
     border-bottom: 1px solid rgba(255,255,255,0.07);
     transition: color 0.2s;
   }
-  .mobile-menu a:hover { color: var(--orange); }
+  .mobile-menu a:hover { color: #e84e1b; }
   .mobile-menu .mob-cta {
-    background: var(--orange);
+    background: #e84e1b;
     color: white !important;
-    margin-top: 20px;
+    margin-top: 24px;
     border-radius: 4px;
     width: auto !important;
     padding: 14px 44px !important;
@@ -1677,19 +1679,21 @@
   }
 
   @media (max-width: 960px) {
-    nav { padding: 0 16px; }
+    nav { padding: 0 16px !important; }
     nav ul { display: none !important; }
-    .hamburger { display: flex; }
+    .nav-phone { display: none !important; }
+    .hamburger { display: flex !important; }
+    /* Deposit */
     .deposit-grid { grid-template-columns: 1fr !important; }
     .deposit-info { display: none !important; }
     .deposit { padding: 40px 20px !important; }
-    .deposit-card { padding: 24px 18px; }
+    .deposit-card { padding: 24px 18px !important; }
     .deposit-form-group input,
     .deposit-form-group select { font-size: 16px !important; }
     #deposit-submit-btn { font-size: 16px !important; padding: 16px !important; }
+    /* Other */
     .booking-form { grid-template-columns: 1fr !important; }
     .steps { grid-template-columns: 1fr !important; }
-    section { padding: 60px 20px !important; }
   }
 
 </style>
@@ -1720,7 +1724,20 @@
     <li><a href="#deposit">Pay Deposit</a></li>
     <li><a href="#contact" class="nav-phone">📞 0478 659 152</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#fleet"   onclick="closeMenu()">Fleet</a>
+  <a href="#pricing" onclick="closeMenu()">Pricing</a>
+  <a href="#how"     onclick="closeMenu()">How It Works</a>
+  <a href="#reviews" onclick="closeMenu()">Reviews</a>
+  <a href="#deposit" onclick="closeMenu()">Pay Deposit</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+  <a href="tel:+61478659152" class="mob-cta">📞 0478 659 152</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -2577,8 +2594,8 @@ function checkAvailability(e) {
     result.className = 'avail-result show available';
     msg.textContent = 'WhatsApp opened! We will confirm your dates shortly. Est. $' + (days * 180) + ' for ' + days + ' day' + (days > 1 ? 's' : '') + '.';
     if (depBtn) depBtn.style.display = 'inline-block';
-    var depHire = document.getElementById('dep-hire');
-    var depDate = document.getElementById('dep-date');
+    var depHire  = document.getElementById('dep-hire');
+    var depDate  = document.getElementById('dep-date');
     var depPhone = document.getElementById('dep-phone');
     if (depHire) depHire.value = hireType;
     if (depDate) depDate.value = pickup;
