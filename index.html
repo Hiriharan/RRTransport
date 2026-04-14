@@ -3,7 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RR Transport Pty Ltd – Truck Hire | Oxley Park, NSW</title>
+<title>RR Transport Pty Ltd – Truck Hire Oxley Park | Western Sydney</title>
+<meta name="description" content="Professional truck hire in Oxley Park, Western Sydney. Isuzu NNR & Hino 300 box trucks from $180/day. 150km included. Self-drive or with driver. Call 0478 659 152.">
+<meta name="keywords" content="truck hire Sydney, truck hire Western Sydney, truck hire Oxley Park, box truck rental NSW, Isuzu truck hire, Hino truck hire, cheap truck hire Sydney, truck hire Penrith, truck hire Blacktown, truck hire Parramatta">
+<meta name="robots" content="index, follow">
+<meta name="author" content="RR Transport Pty Ltd">
+
+<!-- Open Graph (Facebook, Instagram, WhatsApp previews) -->
+<meta property="og:title" content="RR Transport Pty Ltd – Truck Hire Western Sydney">
+<meta property="og:description" content="Isuzu & Hino box trucks from $180/day. 150km included. Self-drive or with driver. Oxley Park NSW.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.rrtransport.au">
+<meta property="og:site_name" content="RR Transport Pty Ltd">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="https://www.rrtransport.au">
+
+<!-- Local Business Schema (tells Google exactly what your business is) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "RR Transport Pty Ltd",
+  "description": "Professional truck hire in Western Sydney. Isuzu NNR and Hino 300 box trucks available for self-drive or with driver. $180/day with 150km included.",
+  "url": "https://www.rrtransport.au",
+  "telephone": "+61478659152",
+  "email": "rrtransport39@gmail.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Oxley Park",
+    "addressLocality": "Oxley Park",
+    "addressRegion": "NSW",
+    "postalCode": "2760",
+    "addressCountry": "AU"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -33.748,
+    "longitude": 150.688
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    "opens": "07:00",
+    "closes": "19:00"
+  },
+  "priceRange": "$180/day",
+  "areaServed": ["Sydney", "Western Sydney", "Oxley Park", "Penrith", "Blacktown", "Parramatta", "Liverpool"],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Truck Hire Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Self-Drive Truck Hire",
+          "description": "Hire an Isuzu NNR or Hino 300 box truck and drive it yourself"
+        },
+        "price": "180",
+        "priceCurrency": "AUD"
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Truck Hire With Driver",
+          "description": "Hire a box truck with an experienced driver included"
+        },
+        "price": "180",
+        "priceCurrency": "AUD"
+      }
+    ]
+  }
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1615,86 +1689,17 @@
   .avail-deposit-btn:hover { background: #15803d; color: white; }
 
 
-  /* ── HAMBURGER TOP RIGHT ── */
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 6px;
-    cursor: pointer;
-    padding: 8px;
-    border: none;
-    background: transparent;
-    margin-left: auto;
-    flex-shrink: 0;
-  }
-  .hamburger span {
-    display: block;
-    width: 26px;
-    height: 3px;
-    background: #ffffff;
-    border-radius: 3px;
-    transition: all 0.3s ease;
-  }
+  .hamburger { display: none; flex-direction: column; justify-content: center; gap: 6px; cursor: pointer; padding: 8px; border: none; background: transparent; margin-left: auto; flex-shrink: 0; }
+  .hamburger span { display: block; width: 26px; height: 3px; background: #ffffff; border-radius: 3px; transition: all 0.3s ease; }
   .hamburger.open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
   .hamburger.open span:nth-child(2) { opacity: 0; }
   .hamburger.open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
-
-  /* ── MOBILE FULLSCREEN MENU ── */
-  .mobile-menu {
-    display: none;
-    position: fixed;
-    top: 70px; left: 0; right: 0; bottom: 0;
-    background: #111e45;
-    z-index: 999;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+  .mobile-menu { display: none; position: fixed; top: 70px; left: 0; right: 0; bottom: 0; background: #111e45; z-index: 999; flex-direction: column; align-items: center; justify-content: center; }
   .mobile-menu.open { display: flex; }
-  .mobile-menu a {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.85);
-    text-decoration: none;
-    padding: 16px 48px;
-    width: 100%;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    transition: color 0.2s;
-  }
+  .mobile-menu a { font-family: "Barlow Condensed", sans-serif; font-size: 30px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.85); text-decoration: none; padding: 16px 48px; width: 100%; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.07); transition: color 0.2s; }
   .mobile-menu a:hover { color: #e84e1b; }
-  .mobile-menu .mob-cta {
-    background: #e84e1b;
-    color: white !important;
-    margin-top: 24px;
-    border-radius: 4px;
-    width: auto !important;
-    padding: 14px 44px !important;
-    border-bottom: none !important;
-    font-size: 22px !important;
-  }
-
-  @media (max-width: 960px) {
-    nav { padding: 0 16px !important; }
-    nav ul { display: none !important; }
-    .nav-phone { display: none !important; }
-    .hamburger { display: flex !important; }
-    /* Deposit */
-    .deposit-grid { grid-template-columns: 1fr !important; }
-    .deposit-info { display: none !important; }
-    .deposit { padding: 40px 20px !important; }
-    .deposit-card { padding: 24px 18px !important; }
-    .deposit-form-group input,
-    .deposit-form-group select { font-size: 16px !important; }
-    #deposit-submit-btn { font-size: 16px !important; padding: 16px !important; }
-    /* Other */
-    .booking-form { grid-template-columns: 1fr !important; }
-    .steps { grid-template-columns: 1fr !important; }
-  }
+  .mobile-menu .mob-cta { background: #e84e1b; color: white !important; margin-top: 24px; border-radius: 4px; width: auto !important; padding: 14px 44px !important; border-bottom: none !important; font-size: 22px !important; }
+  @media (max-width: 960px) { nav { padding: 0 16px !important; } nav ul { display: none !important; } .hamburger { display: flex !important; } .deposit-grid { grid-template-columns: 1fr !important; } .deposit-info { display: none !important; } .deposit { padding: 40px 20px !important; } .booking-form { grid-template-columns: 1fr !important; } .steps { grid-template-columns: 1fr !important; } }
 
 </style>
   <!-- 
@@ -1728,11 +1733,10 @@
     <span></span><span></span><span></span>
   </button>
 </nav>
-
 <div class="mobile-menu" id="mobile-menu">
-  <a href="#fleet"   onclick="closeMenu()">Fleet</a>
+  <a href="#fleet" onclick="closeMenu()">Fleet</a>
   <a href="#pricing" onclick="closeMenu()">Pricing</a>
-  <a href="#how"     onclick="closeMenu()">How It Works</a>
+  <a href="#how" onclick="closeMenu()">How It Works</a>
   <a href="#reviews" onclick="closeMenu()">Reviews</a>
   <a href="#deposit" onclick="closeMenu()">Pay Deposit</a>
   <a href="#contact" onclick="closeMenu()">Contact</a>
@@ -2066,7 +2070,7 @@
 
       <div class="price-card anim">
         <div class="price-type">Additional Charges</div>
-        <div class="price-amount">$0.30</div>
+        <div class="price-amount">$30</div>
         <div class="price-period">per extra km</div>
         <ul class="price-features">
           <li>Bond held on booking</li>
@@ -2367,7 +2371,7 @@
         <form id="enquiry-form" onsubmit="handleFormSubmit(event)">
           <!-- Hidden fields for Formspree -->
           
-          
+          <input type="hidden" name="_replyto" id="hidden-email">
 
           <div class="cf-grid">
             <div class="cf-group">
@@ -2594,8 +2598,8 @@ function checkAvailability(e) {
     result.className = 'avail-result show available';
     msg.textContent = 'WhatsApp opened! We will confirm your dates shortly. Est. $' + (days * 180) + ' for ' + days + ' day' + (days > 1 ? 's' : '') + '.';
     if (depBtn) depBtn.style.display = 'inline-block';
-    var depHire  = document.getElementById('dep-hire');
-    var depDate  = document.getElementById('dep-date');
+    var depHire = document.getElementById('dep-hire');
+    var depDate = document.getElementById('dep-date');
     var depPhone = document.getElementById('dep-phone');
     if (depHire) depHire.value = hireType;
     if (depDate) depDate.value = pickup;
@@ -2657,7 +2661,6 @@ function handleEnquiry(e) {
 }
 
 
-// ── HAMBURGER MENU ──
 function toggleMenu() {
   var menu = document.getElementById('mobile-menu');
   var btn  = document.getElementById('hamburger');
@@ -2672,9 +2675,7 @@ function closeMenu() {
   if (btn)  btn.classList.remove('open');
   document.body.style.overflow = '';
 }
-window.addEventListener('resize', function() {
-  if (window.innerWidth > 960) closeMenu();
-});
+window.addEventListener('resize', function() { if (window.innerWidth > 960) closeMenu(); });
 
 // ── EDIT MODE (Ctrl+Shift+E) ──
 var _editActive = false;
